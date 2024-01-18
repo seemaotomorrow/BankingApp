@@ -5,3 +5,6 @@ GitHub Repository URL: https://github.com/rmit-wdt-summer-2024/s3968520-s3911598
 
 
 must justify the use of any SQL in the readme file.
+
+Reference:
+.gitignore: https://github.com/dotnet/core/blob/main/.gitignore

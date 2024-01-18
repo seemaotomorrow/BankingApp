@@ -6,7 +6,7 @@ namespace BankingApp.Models;
 public class BillPay
 {
     [Key]
-    [DatabseGenerated(DatabseGeneratedOption.Identity)] 
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)] 
     //memo for lea: is an attribute in EF that specific how the database generates values for a particular property.
     public int BillPayID { get; set; }
     

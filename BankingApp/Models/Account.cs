@@ -11,8 +11,8 @@ public enum  AccountType
 
 public class Account
 {
-    [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
-    [Diaplay(Name = "Account Number")]
+    // [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
+    [Display(Name = "Account Number")]
     [Required]
     [Range(1000, 9999, ErrorMessage = "Account number must be 4 digits")]
     public int AccountNumber { get; set; }
@@ -24,6 +24,7 @@ public class Account
     
     [Required]
     public int CustomerID { get; set; }
+    
     [ForeignKey("Customer")]
     public virtual Customer Customer { get; set; }
     
