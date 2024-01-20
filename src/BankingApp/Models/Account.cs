@@ -5,13 +5,14 @@ namespace BankingApp.Models;
 
 public enum  AccountType
 {
-    Checking = 'C', //or change it to num 1/2
-    Saving = 'S'
+    Checking = 1, 
+    Saving = 2
+    
 }
 
 public class Account
 {
-    // [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
+    [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
     [Display(Name = "Account Number")]
     [Required]
     [Range(1000, 9999, ErrorMessage = "Account number must be 4 digits")]
@@ -20,12 +21,22 @@ public class Account
     [Required]
     [StringLength(1)]
     [RegularExpression("^[CS]$", ErrorMessage = "AccountType must be c or s")]
-    public char AccountType { get; set; }
+    public AccountType  AccountType{ get; set; }
+    
     
     [Required]
     public int CustomerID { get; set; }
     
-    [ForeignKey("Customer")]
+    [ForeignKey("CustomerID")]
     public virtual Customer Customer { get; set; }
+    
+    [Column(TypeName = "money")]
+    [DataType(DataType.Currency)]
+    public decimal Balance { get; set; }
+
+    // Set ambiguous navigation property with InverseProperty annotation or Fluent-API in the bankingContext.cs file.
+    [InverseProperty("Account")]
+    public virtual List<Transaction> Transactions { get; set; }
+    
     
 }
