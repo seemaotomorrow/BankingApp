@@ -5,13 +5,17 @@ namespace BankingApp.Models;
 
 public class BillPay
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)] 
     //memo for lea: is an attribute in EF that specific how the database generates values for a particular property.
     public int BillPayID { get; set; }
     
+    [ForeignKey("Account")]
     [Required]
     public int AccountNumber { get; set; }
+    public virtual Account Account { get; set; }
+    
+    [ForeignKey("Payee")]
+    public int PayeeID { get; set; } 
+    public virtual Payee Payee { get; set; }
     
     [Column(TypeName = "money")]
     [Required(ErrorMessage = "Amount is required")]
@@ -28,10 +32,6 @@ public class BillPay
     //To represent whether the payment is a one-off or monthly payment
     public char Period { get; set; } //  (One-off 'O' or Monthly 'M')
 
-    [ForeignKey("AccountNumber")]
-    public virtual Account Account { get; set; }
 
-    [ForeignKey("PayeeID")]
-    public virtual Payee Payee { get; set; }
 }
     

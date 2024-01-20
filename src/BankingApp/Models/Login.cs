@@ -4,15 +4,13 @@ namespace BankingApp.Models;
 
 public class Login
 {
-    [Key] //PK?
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int LoginID { get; set; }
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    [Required]
+    [StringLength(8)]
+    public string LoginID { get; set; }
 
     [Required]
-    [ForeignKey("Customer")]
     public int CustomerID { get; set; }
-    
-    //Navigation property to the Customer entity
     public virtual Customer Customer { get; set; }
     
     [Required]

@@ -5,8 +5,6 @@ namespace BankingApp.Models;
 
 public class Payee
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int PayeeID { get; set; }
 
     [Required]
