@@ -1,7 +1,7 @@
 using BankingApp.Models;
 using Newtonsoft.Json;
 
-namespace BankingApp.Converters;
+namespace BankingApp.Utilities;
 
 // Reference: RMIT WDT Day7 Assignment 2 Workshop
 public class AccountTypeStringToAccountTypeEnumConverter : JsonConverter<AccountType>
