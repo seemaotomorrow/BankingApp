@@ -7,11 +7,11 @@ namespace BankingApp.Controllers;
 
 public class MyProfileController: Controller
 {
-    private readonly BankingContext _context; //may need to replace real DB  maybe!
+    private readonly BankingAppContext _context; //may need to replace real DB  maybe!
     private int CustomerID => HttpContext.Session.GetInt32(nameof(Customer.CustomerID)).Value;
     
 
-    public MyProfileController(BankingContext context)
+    public MyProfileController(BankingAppContext context)
     {
         _context = context;
     }

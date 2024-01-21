@@ -8,9 +8,9 @@ namespace BankingApp.Controllers;
 
 public class MyStatementsController : Controller
 {
-    private readonly BankingContext _context;
+    private readonly BankingAppContext _context;
 
-    public MyStatementsController(BankingContext context)
+    public MyStatementsController(BankingAppContext context)
     {
         _context = context;
     }  

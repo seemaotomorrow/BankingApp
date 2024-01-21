@@ -8,9 +8,9 @@ namespace BankingApp.Controllers;
 public class BillPayController : Controller
 {
     
-    private readonly BankingContext _context;
+    private readonly BankingAppContext _context;
 
-    public BillPayController(BankingContext context)
+    public BillPayController(BankingAppContext context)
     {
         _context = context;
     }
