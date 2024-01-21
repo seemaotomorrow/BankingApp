@@ -2,13 +2,12 @@ using BankingApp.Data;
 using Microsoft.EntityFrameworkCore;
 
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<BankingContext>(options =>
+builder.Services.AddDbContext<BankingAppContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(BankingContext)));
+    options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(BankingAppContext)));
 
     // Enable lazy loading.
     options.UseLazyLoadingProxies();
@@ -22,12 +21,11 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-
 builder.Services.AddControllersWithViews(); 
 var app = builder.Build();
 
-// Seed data.
-using(var scope = app.Services.CreateScope())
+// Seed Data
+using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
@@ -41,10 +39,7 @@ using(var scope = app.Services.CreateScope())
     }
 }
 
-// Configure the HTTP request pipeline.
-if(!app.Environment.IsDevelopment())
-    app.UseExceptionHandler("/Home/Error");
-
+// HTTPS Pipeline configuration
 app.UseHttpsRedirection();
 app.UseStaticFiles(); //This is wwwroot files
 app.UseRouting();

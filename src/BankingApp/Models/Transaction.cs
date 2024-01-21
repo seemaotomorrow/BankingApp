@@ -6,16 +6,14 @@ public enum TransactionType
 {
     Deposit = 'D', 
     Withdraw = 'W',
-    DebitTransferFromSource = 'T',
-    CreditTransferToTarget ='T',
+    TransferOut = 'O',
+    TransferIn ='I',
     ServiceCharge = 'S',
     Billpay = 'B'
 }
 
 public class Transaction
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int TransactionID { get; set; }
     
     public TransactionType TransactionType { get; set; }
@@ -23,7 +21,6 @@ public class Transaction
     [ForeignKey("Account")]
     [Required]
     public int AccountNumber { get; set; }
-    
     public virtual Account Account { get; set; }
     
     [ForeignKey("DestinationAccount")]
@@ -36,7 +33,7 @@ public class Transaction
     public decimal Amount { get; set; } //Amount to credit or debit?
     
     [StringLength(30)]
-    public string Comment { get; set; }
+    public string? Comment { get; set; }
     
     [Required]
     [Column(TypeName = "datetime2")]

@@ -1,68 +1,71 @@
-using Microsoft.AspNetCore.Mvc;
-using BankingApp.Models;
 using BankingApp.Data;
-using BankingApp.Utilities; 
+using BankingApp.Models;
+using BankingApp.ViewModels;
 using BankingApp.Filters;
+using BankingApp.Utilities;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace BankingApp.Controllers;
 
 [AuthorizeCustomer]
 public class CustomerController : Controller
 {
-    private readonly BankingContext _context;
 
-    // ReSharper disable once PossibleInvalidOperationException
+    private readonly BankingAppContext _context;
     private int CustomerID => HttpContext.Session.GetInt32(nameof(Customer.CustomerID)).Value;
 
-    public CustomerController(BankingContext context)
+    public CustomerController(BankingAppContext context)
     {
         _context = context;
     }
 
-    // Can add authorize attribute to actions.
-    //[AuthorizeCustomer]
     public async Task<IActionResult> Index()
     {
-        // Lazy loading.
-        // The Customer.Accounts property will be lazy loaded upon demand.
-        var customer = await _context.Customers.FindAsync(CustomerID);
-
-
+        // Eager loading.
+        var customer = await _context.Customers.Include(x => x.Accounts).
+            FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
         return View(customer);
     }
 
-    public async Task<IActionResult> Deposit(int id) => View(await _context.Accounts.FindAsync(id));
+    public async Task<IActionResult> Deposit(int accountNumber)
+    {
+        return View(
+            new DepositViewModel
+            {
+                AccountNumber = accountNumber,
+                Account = await _context.Accounts.FindAsync(accountNumber) 
+            });
+    }
 
     [HttpPost]
-    public async Task<IActionResult> Deposit(int id, decimal amount)
+    public async Task<IActionResult> Deposit(DepositViewModel viewModel)
     {
-        var account = await _context.Accounts.FindAsync(id);
-
-        if (amount <= 0)
-            ModelState.AddModelError(nameof(amount), "Amount must be positive.");
-        else if (amount.HasMoreThanTwoDecimalPlaces())
-            ModelState.AddModelError(nameof(amount), "Amount cannot have more than 2 decimal places.");
-
-        if (!ModelState.IsValid)
+        viewModel.Account = await _context.Accounts.FindAsync(viewModel.AccountNumber);
+        // validators
+        if(viewModel.Amount <= 0)
         {
-            ViewBag.Amount = amount;
-            return View(account);
+            ModelState.AddModelError(nameof(viewModel.Amount), "Amount must be positive.");
+            return View(viewModel);
         }
-
-        // Business logic for deposit
-        account.Balance += amount;
-        account.Transactions.Add(
+        if(viewModel.Amount.HasMoreThanTwoDecimalPlaces())
+        {
+            ModelState.AddModelError(nameof(viewModel.Amount), "Amount cannot have more than 2 decimal places.");
+            return View(viewModel);
+        }
+        viewModel.Account.Balance += viewModel.Amount;
+        viewModel.Account.Transactions.Add(
             new Transaction
             {
                 TransactionType = TransactionType.Deposit,
-                Amount = amount,
+                AccountNumber = viewModel.AccountNumber,
+                Amount = viewModel.Amount,
                 TransactionTimeUtc = DateTime.UtcNow
             });
 
         await _context.SaveChangesAsync();
 
-        // Redirect to the Index action after successful deposit
         return RedirectToAction(nameof(Index));
     }
 }
-    
