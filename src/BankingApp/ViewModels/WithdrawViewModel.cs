@@ -2,7 +2,7 @@ using BankingApp.Models;
 
 namespace BankingApp.ViewModels;
 
-public class DepositViewModel
+public class WithdrawViewModel
 {
     // For display
     public int AccountNumber { get; set; }

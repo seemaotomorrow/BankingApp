@@ -41,10 +41,5 @@
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="SimpleHashing.Net" Version="2.1.0" />
     </ItemGroup>
-
-    <ItemGroup>
-      <_ContentIncludedByDefault Remove="Views\Customer\Index.cshtml" />
-
-    </ItemGroup>
-
+    
 </Project>
