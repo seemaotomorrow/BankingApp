@@ -52,9 +52,7 @@ public static class SeedData
                 account.Balance = initialBalance;
                 account.CustomerID = customer.CustomerID;
                 context.Accounts.Add(account);
-
             }
-            
         }
         context.SaveChanges();
     }

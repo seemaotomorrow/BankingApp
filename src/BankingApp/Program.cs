@@ -1,13 +1,14 @@
 using BankingApp.Data;
 using Microsoft.EntityFrameworkCore;
 
-var builder = WebApplication.CreateBuilder(args);
 
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<BankingAppContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(BankingAppContext)));
+
     // Enable lazy loading.
     options.UseLazyLoadingProxies();
 });
@@ -20,8 +21,7 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-builder.Services.AddControllersWithViews();
-
+builder.Services.AddControllersWithViews(); 
 var app = builder.Build();
 
 // Seed Data
@@ -41,7 +41,7 @@ using (var scope = app.Services.CreateScope())
 
 // HTTPS Pipeline configuration
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseStaticFiles(); //This is wwwroot files
 app.UseRouting();
 app.UseAuthorization();
 app.UseSession();

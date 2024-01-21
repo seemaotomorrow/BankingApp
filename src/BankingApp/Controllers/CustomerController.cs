@@ -6,14 +6,15 @@ using BankingApp.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace BankingApp.Controllers;
 
 [AuthorizeCustomer]
 public class CustomerController : Controller
 {
+
     private readonly BankingAppContext _context;
     private int CustomerID => HttpContext.Session.GetInt32(nameof(Customer.CustomerID)).Value;
-
 
     public CustomerController(BankingAppContext context)
     {
@@ -25,7 +26,6 @@ public class CustomerController : Controller
         // Eager loading.
         var customer = await _context.Customers.Include(x => x.Accounts).
             FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
-
         return View(customer);
     }
 

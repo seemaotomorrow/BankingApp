@@ -1,0 +1,25 @@
+@model IEnumerable<BankingApp.Models.BillPay>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>BillPay ID</th>
+        <th>Account Number</th>
+        <th>Amount</th>
+        <th>Schedule Time</th>
+        <th>Period</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.BillPayID</td>
+            <td>@item.AccountNumber</td>
+            <td>@item.Amount</td>
+            <td>@item.ScheduleTimeUtc</td>
+            <td>@item.Period</td>
+        </tr>
+    }
+    </tbody>
+</table>

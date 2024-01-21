@@ -1,0 +1,19 @@
+@model Customer
+
+<h2>My Profile</h2>
+
+<!-- Display the profile information -->
+<div>
+    <p>Name: @Model.Name</p>
+    <p>TFN: @Model.TFN</p>
+    <p>Address: @Model.Address</p>
+    <p>City: @Model.City</p>
+    <p>State: @Model.State</p>
+    <p>PostCode: @Model.PostCode</p>
+    <p>Mobile: @Model.Mobile</p>
+    
+</div>
+
+<a asp-action="Edit" asp-controller="MyProfile">Edit Profile</a>
+
+

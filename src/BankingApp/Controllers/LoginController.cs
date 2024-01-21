@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using BankingApp.Models;
 using SimpleHashing.Net;
 
-
 namespace BankingApp.Controllers;
 
 [Route("/BankingApp/SecureLogin")]
@@ -15,12 +14,12 @@ public class LoginController: Controller
     private readonly BankingAppContext _context;
 
     public LoginController(BankingAppContext context)
+
     {
         _context = context;
     }
-
-    public IActionResult Login() => View();
     
+    public IActionResult Login() => View();
     
     [HttpPost]
     public async Task<IActionResult> Login(string loginID, string password)
@@ -52,5 +51,4 @@ public class LoginController: Controller
 
         return RedirectToAction("Index", "Home");
     }
-
 }
