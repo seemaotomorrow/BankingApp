@@ -18,6 +18,9 @@ namespace BankingApp.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.1")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -28,7 +31,6 @@ namespace BankingApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("AccountType")
-                        .HasMaxLength(1)
                         .HasColumnType("int");
 
                     b.Property<decimal>("Balance")
@@ -100,8 +102,9 @@ namespace BankingApp.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Postcode")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("PostCode")
+                        .HasMaxLength(4)
+                        .HasColumnType("nvarchar(4)");
 
                     b.Property<string>("State")
                         .HasMaxLength(3)
