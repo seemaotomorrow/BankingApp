@@ -100,11 +100,29 @@ public class MyProfileController: Controller
         {
             return NotFound();
         }
-
+        
+        // // new password & confirm password field are not null
+        // if (model.ConfirmPassword == null || model.NewPassword == null)
+        // {
+        //     ModelState.AddModelError("ConfirmPassword", "Confirm password is required.");
+        //     return View(model);
+        // }
+        
+        // // If new password == confirm password
+        // if (model.NewPassword != model.ConfirmPassword)
+        // {
+        //     ModelState.AddModelError("", "New password doesn't match Confirm password.");
+        //     return View(model);
+        // }
+        
+        // Check all the validations
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+        
+        // Check if User input correct old password
         var inputOldPCorrect = s_simpleHash.Verify(model.OldPassword, login.PasswordHash);
-
-        // var verificationResult = _passwordHasher.VerifyHashedPassword(login, login.PasswordHash, model.OldPassword);
-        // if (verificationResult != PasswordVerificationResult.Success)
         if(!inputOldPCorrect)
         {
             ModelState.AddModelError("OldPassword", "The current password is incorrect.");
@@ -123,9 +141,6 @@ public class MyProfileController: Controller
 }
 
 
-    //Lea: have to implement the ChangePassword method here
-    //The user should be able to change their password INDEPENDENTLY from the customer infor.
-    //also any update must be written back to the databse
     //should be able to update the profile fields without changing the PW
     //should be able to change the password without updating the profile
     
