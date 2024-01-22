@@ -27,5 +27,4 @@ public class CustomerController : Controller
             FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
         return View(customer);
     }
-    
 }
