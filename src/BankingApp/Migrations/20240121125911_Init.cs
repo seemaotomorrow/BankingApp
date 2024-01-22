@@ -21,7 +21,7 @@ namespace BankingApp.Migrations
                     Address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     City = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: true),
                     State = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true),
-                    Postcode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PostCode = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: true),
                     Mobile = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: true)
                 },
                 constraints: table =>
@@ -52,7 +52,7 @@ namespace BankingApp.Migrations
                 columns: table => new
                 {
                     AccountNumber = table.Column<int>(type: "int", nullable: false),
-                    AccountType = table.Column<int>(type: "int", maxLength: 1, nullable: false),
+                    AccountType = table.Column<int>(type: "int", nullable: false),
                     CustomerID = table.Column<int>(type: "int", nullable: false),
                     Balance = table.Column<decimal>(type: "money", nullable: false)
                 },

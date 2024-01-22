@@ -31,12 +31,12 @@ public class CustomerController : Controller
 
     public async Task<IActionResult> Deposit(int accountNumber)
     {
-        return View(
-            new DepositViewModel
-            {
-                AccountNumber = accountNumber,
-                Account = await _context.Accounts.FindAsync(accountNumber) 
-            });
+    return View(
+    new DepositViewModel
+    {
+    AccountNumber = accountNumber,
+    Account = await _context.Accounts.FindAsync(accountNumber) 
+    });
     }
 
     [HttpPost]

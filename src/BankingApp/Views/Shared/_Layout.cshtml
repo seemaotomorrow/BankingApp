@@ -30,8 +30,15 @@
                                 </span>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="MyProfile" asp-action="Index">My Profile</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="MyStatements" asp-action="Index">My Statements</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Login" asp-action="Logout">Logout</a>
                             </li>
+                            
                         } else {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Login" asp-action="Login">Login</a>
