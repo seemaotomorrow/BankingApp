@@ -16,9 +16,10 @@
             <div class="form-group">
                 <label for="Password" class="control-label">Password</label>
                 <input id="Password" name="Password" type="password" class="form-control"
-                    data-val="true" data-val-required="The Password field is required." />
+                       data-val="true" data-val-required="The Password field is required." />
                 @Html.ValidationMessage("Password", new { @class = "text-danger" })
             </div>
+            <br/>
             <div class="form-group">
                 <input type="submit" value="Login" class="btn btn-primary" />
             </div>

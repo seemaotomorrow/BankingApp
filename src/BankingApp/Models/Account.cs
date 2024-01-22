@@ -34,5 +34,31 @@ public class Account
 
     [InverseProperty("Account")]
     public virtual List<Transaction> Transactions { get; set; }
+    
+    [NotMapped]
+    public decimal MinimumBalanceAllowed => AccountType == AccountType.Saving ? 0.01M : 300M;
 
+    [NotMapped]
+    private int FreeTransactions { get; set; } = 2;
+
+    public bool HasFreeTransaction()
+    {
+        var hasFreeTransaction =
+            Transactions.Count(x => x.TransactionType is TransactionType.Withdraw or TransactionType.TransferOut) < FreeTransactions;
+        return hasFreeTransaction;
+    }
+    
+    public Transaction? ApplyServiceCharge(decimal amount, bool applyServiceCharge)
+    {
+        // Create a new transaction for the service charge
+        if (applyServiceCharge)
+            return new Transaction
+            {
+                AccountNumber = AccountNumber,
+                TransactionType = TransactionType.ServiceCharge,
+                Amount = amount,
+                TransactionTimeUtc = DateTime.UtcNow
+            };
+        return null;
+    }
 }
