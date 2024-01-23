@@ -40,6 +40,7 @@ public class Account
 
     [NotMapped]
     private int FreeTransactions { get; set; } = 2;
+    
 
     public bool HasFreeTransaction()
     {

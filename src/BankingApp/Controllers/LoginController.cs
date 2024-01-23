@@ -8,7 +8,7 @@ namespace BankingApp.Controllers;
 [Route("/BankingApp/SecureLogin")]
 public class LoginController: Controller
 {
-    // Naming convention: static have s, private have _
+    // Naming convention: static have s, private have 
     private static readonly ISimpleHash s_simpleHash = new SimpleHash();
 
     private readonly BankingAppContext _context;

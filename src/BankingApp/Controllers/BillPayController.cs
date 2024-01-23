@@ -46,5 +46,13 @@ public class BillPayController : Controller
 }
 
 
+// Check the bIllpay table for rows that need to be
+// processed, select the row that are scheduled to be paid;
+// i.e., comparing dtaTime,UtcNow to scheduletimeUtc
+// - process the bill
+// if not -- what should be done?
+//- Opyion 1: skip it 
+
+
         
   

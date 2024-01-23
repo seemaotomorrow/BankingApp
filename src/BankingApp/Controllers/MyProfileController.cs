@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using BankingApp.Models;
 using BankingApp.Data;
-using System.Threading.Tasks;
-using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using SimpleHashing.Net;
+using BankingApp.ViewModels;
 
 namespace BankingApp.Controllers;
 
@@ -34,50 +33,78 @@ public class MyProfileController: Controller
         return View("Index", customer);
     }
     
+  
+    
     // GET: MyProfile/Edit
     public async Task<IActionResult> Edit()
     {
+        var customer = await _context.Customers.FindAsync(CustomerID);
+        
+        if (customer == null)
+        {
+            return NotFound();
+        }
+        
+        var editViewModel = new EditViewModel
+        {
+            Name = customer.Name,
+            TFN = customer.TFN,
+            Address =customer.Address,
+            City = customer.City,
+            State = customer.State,
+            PostCode = customer.PostCode,
+            Mobile = customer.Mobile
+        };
+
+        return View(editViewModel);
+    }
+            
+            
+    
+    
+    // POST: MyProfile/Edit
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(EditViewModel model)
+    {
+
         var customer = await _context.Customers.FindAsync(CustomerID);
         if (customer == null)
         {
             return NotFound();
         }
-        return View(customer);
+        
+        if (!ModelState.IsValid)
+            return View(model);
+
+        customer.Name = model.Name;
+        customer.TFN = model.TFN;
+        customer.Address = model.Address;
+        customer.City = model.City;
+        customer.State = model.State;
+        customer.PostCode = model.PostCode;
+        customer.Mobile = model.Mobile;
+
+        try
+        {
+            _context.Update(customer);
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Profile updated successfully.";
+        }
+        catch (DbUpdateException)
+        {
+            // Log the error
+            ModelState.AddModelError("", "Unable to save changes. " +
+                                         "Try again, and if the problem persists, " +
+                                         "see your system administrator.");
+            return View(model);
+        }
+
+        return RedirectToAction(nameof(Index));
     }
     
-    // POST: MyProfile/Edit
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(Customer customer)
-    {
-        if (customer.CustomerID != CustomerID)
-        {
-            return NotFound();
-        }
-
-        if (ModelState.IsValid)
-        {
-            try
-            {
-                _context.Update(customer);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                if (!_context.Customers.Any(e => e.CustomerID == customer.CustomerID))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-        }
-        return View(customer);
-    }
-
+    
+    
     // GET: MyProfile/ChangePassword
     public IActionResult ChangePassword()
     {
@@ -94,22 +121,26 @@ public class MyProfileController: Controller
         {
             return NotFound();
         }
+        
+        if (!ModelState.IsValid)
+            return View();
 
         var login = await _context.Logins.FirstOrDefaultAsync(l => l.CustomerID == CustomerID);
         if (login == null)
         {
             return NotFound();
         }
-
+        // This is user to input old PW to compare the logedin one
         var inputOldPCorrect = s_simpleHash.Verify(model.OldPassword, login.PasswordHash);
 
-        // var verificationResult = _passwordHasher.VerifyHashedPassword(login, login.PasswordHash, model.OldPassword);
-        // if (verificationResult != PasswordVerificationResult.Success)
+        
         if(!inputOldPCorrect)
         {
             ModelState.AddModelError("OldPassword", "The current password is incorrect.");
             return View(model);
         }
+        
+        //need to implement more logic here if user put null. 
 
         login.PasswordHash = s_simpleHash.Compute(model.NewPassword);
         _context.Update(login);
@@ -120,14 +151,11 @@ public class MyProfileController: Controller
 
         return RedirectToAction(nameof(Index));
     }
+
+  
 }
 
 
-    //Lea: have to implement the ChangePassword method here
-    //The user should be able to change their password INDEPENDENTLY from the customer infor.
-    //also any update must be written back to the databse
-    //should be able to update the profile fields without changing the PW
-    //should be able to change the password without updating the profile
     
 
 
