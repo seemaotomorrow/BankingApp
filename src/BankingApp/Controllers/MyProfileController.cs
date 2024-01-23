@@ -130,10 +130,10 @@ public class MyProfileController: Controller
         {
             return NotFound();
         }
+
         // This is user to input old PW to compare the logedin one
         var inputOldPCorrect = s_simpleHash.Verify(model.OldPassword, login.PasswordHash);
 
-        
         if(!inputOldPCorrect)
         {
             ModelState.AddModelError("OldPassword", "The current password is incorrect.");
@@ -154,8 +154,6 @@ public class MyProfileController: Controller
 
   
 }
-
-
     
 
 
