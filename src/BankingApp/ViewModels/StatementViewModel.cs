@@ -1,11 +1,41 @@
-namespace BankingApp.Utilities;
-
+using BankingApp.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
+namespace BankingApp.ViewModels;
+
+public class StatementViewModel
+{
+    public virtual List<Account> Accounts { get; set; }
+    public int CustomerID { get; set; }
+    public PaginatedList<TransactionViewModel> Transactions { get; set; }
+    public int TotalTransactions { get; set; } 
+    public int CurrentPage { get; set; } 
+}
+
+public class TransactionViewModel
+{
+    public int TransactionID { get; set; }
+    
+    public string TransactionType { get; set; }
+    
+    public int AccountNumber { get; set; }
+    
+    public int? DestinationAccountNumber { get; set; }
+    
+    
+    [Range(0.01,double.MaxValue)]
+    public decimal Amount { get; set; }
+
+    public DateTime TransactionTimeUtc { get; set; }
+    public string? Comment { get; set; }
+    
+    
+}
 
 public class PaginatedList<T> : List<T>
 {
@@ -16,8 +46,7 @@ public class PaginatedList<T> : List<T>
     {
         PageIndex = pageIndex;
         TotalPages = (int)Math.Ceiling(count / (double)pageSize);
-
-        this.AddRange(items);
+        AddRange(items);
     }
 
     public bool HasPreviousPage => PageIndex > 1;

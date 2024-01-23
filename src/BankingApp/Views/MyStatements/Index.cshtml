@@ -1,0 +1,73 @@
+@model BankingApp.ViewModels.StatementViewModel
+
+@{
+    ViewBag.Title = "Account Statement";
+}
+
+<h2>Account Statement</h2>
+
+
+@if (Model.Accounts != null && Model.Accounts.Any())
+{
+    <h3>Accounts</h3>
+    <ul>
+        @foreach (var account in Model.Accounts)
+        {
+            <li>
+                Account Number: @account.AccountNumber - Balance: @account.Balance.ToString("0.00")
+                
+            </li>
+        }
+    </ul>
+}
+
+<h3>Transactions</h3>
+
+@if (Model.Transactions != null && Model.Transactions.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Transaction ID</th>
+                <th>Type</th>
+                <th>Account Number</th>
+                <th>Destination Account</th>
+                <th>Amount</th>
+                <th>Date/Time</th>
+                <th>Comment</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var transaction in Model.Transactions)
+            {
+                <tr>
+                    <td>@transaction.TransactionID</td>
+                    <td>@transaction.TransactionType</td>
+                    <td>@transaction.AccountNumber</td>
+                    <td>@(transaction.DestinationAccountNumber.HasValue ? transaction.DestinationAccountNumber.Value.ToString() : "N/A")</td>
+                    <td>@transaction.Amount.ToString("0.00")</td>
+                    <td>@transaction.TransactionTimeUtc</td>
+                    <td>@transaction.Comment</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div>
+        Page @Model.Transactions.PageIndex of @Model.Transactions.TotalPages
+        
+        @if (Model.Transactions.HasPreviousPage)
+        {
+            <a asp-action="MyStatement" asp-route-customerID="@Model.CustomerID" asp-route-page="@(Model.Transactions.PageIndex - 1)">Previous</a>
+        }
+
+        @if (Model.Transactions.HasNextPage)
+        {
+            <a asp-action="MyStatement" asp-route-customerID="@Model.CustomerID" asp-route-page="@(Model.Transactions.PageIndex + 1)">Next</a>
+        }
+    </div>
+}
+else
+{
+    <p>No transactions found.</p>
+}
