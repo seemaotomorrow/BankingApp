@@ -101,20 +101,6 @@ public class MyProfileController: Controller
             return NotFound();
         }
         
-        // // new password & confirm password field are not null
-        // if (model.ConfirmPassword == null || model.NewPassword == null)
-        // {
-        //     ModelState.AddModelError("ConfirmPassword", "Confirm password is required.");
-        //     return View(model);
-        // }
-        
-        // // If new password == confirm password
-        // if (model.NewPassword != model.ConfirmPassword)
-        // {
-        //     ModelState.AddModelError("", "New password doesn't match Confirm password.");
-        //     return View(model);
-        // }
-        
         // Check all the validations
         if (!ModelState.IsValid)
         {

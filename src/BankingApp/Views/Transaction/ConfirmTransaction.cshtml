@@ -1,0 +1,41 @@
+@model ConfirmTransactionViewModel
+@{
+    ViewData["Title"] = $"{Model.TransactionType} Confirmation";
+}
+
+<h2>@Model.TransactionType Confirmation</h2>
+<div class="row">
+    <div class="col-md-4">
+        <form id="confirmForm" asp-action="ConfirmTransaction" asp-controller="Transaction" method="post" onsubmit="return showPopup();">
+            <input type="hidden" asp-for="TransactionType"/>
+            <input type="hidden" asp-for="SourceAccountNumber"/>
+            <input type="hidden" asp-for="DestinationAccountNumber"/>
+            <input type="hidden" asp-for="Amount"/>
+            <input type="hidden" asp-for="Comment"/>
+
+            <p>Account Number: @Model.SourceAccountNumber (@Model.SourceAccountType)</p>
+            @if (Model.TransactionType == TransactionType.TransferOut)
+            {
+                <p>Destination Account Number: @Model.DestinationAccountNumber</p>
+            }
+            <p>Amount: @Model.Amount</p>
+            <p>Comment: @Model.Comment</p>
+            <input type="submit" value="Confirm" class="btn btn-primary"/>
+            <a asp-action="Index" asp-controller="Customer">Cancel</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showPopup() {
+            var transactionType = '@Model.TransactionType'; // Get the transaction type from the Razor view
+            var confirmation = confirm("Are you sure you want to confirm the transaction?");
+            if (confirmation) {
+                alert(transactionType + " successful!");
+                return true; // Allow the form to be submitted
+            }
+            return false; // Prevent the form from being submitted
+        }
+    </script>
+}
