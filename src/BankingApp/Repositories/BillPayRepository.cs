@@ -9,11 +9,12 @@ public class BillPayRepository(BankingAppContext context) : IBillPayRepository
 {
     private readonly BankingAppContext _context = context;
 
-    public IEnumerable<BillPay> GetBillPaysForCustomer(int customerID)
+    public IEnumerable<BillPay> GetScheduledBillPaysForCustomer(int customerID)
     {
         // Retrieve all bill payments for a specific customer
         return context.BillPays
             .Where(bp => bp.Account.CustomerID == customerID)
+            .Where(bp => bp.Status == BillPayStatus.Scheduled)
             .ToList();
     }
     
@@ -45,7 +46,8 @@ public class BillPayRepository(BankingAppContext context) : IBillPayRepository
         var billPay = _context.BillPays.Find(billPayId);
         if (billPay != null)
         {
-            _context.BillPays.Remove(billPay);
+            billPay.Status = BillPayStatus.Canceled;
+            _context.BillPays.Update(billPay);
             _context.SaveChanges();
         }
     }

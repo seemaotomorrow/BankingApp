@@ -9,7 +9,7 @@ public interface IBillPayRepository
     BillPay GetBillPay(int billPayId);
     void CancelBillPay(int billPayId);
     void CompleteBillPay(int billPayId);
-    IEnumerable<BillPay> GetBillPaysForCustomer(int customerID);
+    IEnumerable<BillPay> GetScheduledBillPaysForCustomer(int customerID);
     IEnumerable<BillPay> GetPendingBillPays();
 
     SelectList GetAccountNumbersForCurrentCustomer(int customerID);

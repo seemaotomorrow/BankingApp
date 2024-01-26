@@ -12,7 +12,7 @@
         <h3>Scheduled Payments</h3>
     </div>
     <table class="table">
-        <thead>
+        @* <thead> *@
         <tr>
             <th>BillPay ID</th>
             <th>Account Number</th>
@@ -20,16 +20,20 @@
             <th>Schedule Time</th>
             <th>Period</th>
         </tr>
-        </thead>
+        @* </thead> *@
         <tbody>
-        @foreach (var item in Model)
+        @foreach (var billPay in Model)
         {
             <tr>
-                <td>@item.BillPayID</td>
-                <td>@item.AccountNumber</td>
-                <td>@item.Amount</td>
-                <td>@item.ScheduleTimeUtc</td>
-                <td>@item.Period</td>
+                <td>@billPay.BillPayID</td>
+                <td>@billPay.AccountNumber</td>
+                <td>@billPay.Amount.ToString("0.00")</td>
+                <td>@billPay.ScheduleTimeUtc</td>
+                <td>@billPay.Period</td>
+                <td>
+                     <a class="btn btn-primary" asp-controller="BillPay"
+                        asp-action="Cancel" asp-route-billPayId="@billPay.BillPayID">Cancel</a>
+                </td>
             </tr>
         }
         </tbody>

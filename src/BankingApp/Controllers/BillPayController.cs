@@ -15,7 +15,7 @@ public class BillPayController(IBillPayRepository billPayRepository) : Controlle
     // show all BillPay record
     public async Task<IActionResult> Index()
     {
-        var billPays = billPayRepository.GetBillPaysForCustomer(CustomerID);
+        var billPays = billPayRepository.GetScheduledBillPaysForCustomer(CustomerID);
         return View(billPays);
     }
     
@@ -46,15 +46,24 @@ public class BillPayController(IBillPayRepository billPayRepository) : Controlle
         return RedirectToAction(nameof(Index));
     }
     
-    public IActionResult CancelBillPay(int billPayId)
+    public async Task<IActionResult> Cancel(int billPayID)
     {
-        _billPayRepository.CancelBillPay(billPayId);
+        if (billPayID == null)
+            return NotFound();
+        var billPayment = billPayRepository.GetBillPay(billPayID);
+        
+        return View(billPayment);
+    }
+    
+    [HttpPost, ActionName("CancelConfirmed")]
+    [ValidateAntiForgeryToken]
+    public IActionResult CancelConfirmed(int billPayID)
+    {
+        billPayRepository.CancelBillPay(billPayID);
         return RedirectToAction("Index");
     }
 }
 
-
-// Check the bIllpay table for rows that need to be
 // processed, select the row that are scheduled to be paid;
 // i.e., comparing dtaTime,UtcNow to scheduletimeUtc
 // - process the bill

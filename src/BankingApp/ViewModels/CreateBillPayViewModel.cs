@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using BankingApp.Tools.Utilities;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BankingApp.ViewModels;
@@ -8,7 +9,9 @@ namespace BankingApp.ViewModels;
 public class CreateBillPayViewModel
 {
     // For display
+    [ValidateNever]
     public SelectList AccountNumbers { get; set; }
+    [ValidateNever]
     public SelectList PayeeIDs { get; set; }
     
     // For get user input
