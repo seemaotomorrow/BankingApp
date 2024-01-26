@@ -1,30 +1,42 @@
-@model BillPay
+@model CreateBillPayViewModel
 
-<form asp-action="Create">
-    <div class="form-group">
-        <label asp-for="AccountNumber" class="control-label"></label>
-        <input asp-for="AccountNumber" class="form-control" />
-        <span asp-validation-for="AccountNumber" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Amount" class="control-label"></label>
-        <input asp-for="Amount" class="form-control" />
-        <span asp-validation-for="Amount" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ScheduleTimeUtc" class="control-label"></label>
-        <input asp-for="ScheduleTimeUtc" class="form-control" type="datetime-local" />
-        <span asp-validation-for="ScheduleTimeUtc" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Period" class="control-label"></label>
-        <select asp-for="Period" class="form-control">
-            <option value="O">One-off</option>
-            <option value="M">Monthly</option>
-        </select>
-        <span asp-validation-for="Period" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Create" class="btn btn-primary" />
-    </div>
-</form>
+<div>
+    <h1 class="display-4">Schedule a Payment</h1>
+
+    <form asp-action="Create">
+        <div class="form-group">
+            <label asp-for="SelectedAccountNumber" class="control-label">Select a Account</label>
+            <select asp-for="SelectedAccountNumber" asp-items="Model.AccountNumbers" class="form-control" ></select>
+            <span asp-validation-for="SelectedAccountNumber" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="SelectedPayeeID" class="control-label">Select a Payee</label>
+            <select asp-for="SelectedPayeeID" asp-items="Model.PayeeIDs" class="form-control" ></select>
+            <span asp-validation-for="SelectedPayeeID" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Amount" class="control-label"></label>
+            <input asp-for="Amount" class="form-control" />
+            <span asp-validation-for="Amount" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ScheduleTimeUtc" class="control-label"></label>
+            <input asp-for="ScheduleTimeUtc" class="form-control" type="datetime-local" />
+            <span asp-validation-for="ScheduleTimeUtc" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Period" class="control-label"></label>
+            <select asp-for="Period" class="form-control">
+                <option value="O">One-off</option>
+                <option value="M">Monthly</option>
+            </select>
+            <span asp-validation-for="Period" class="text-danger"></span>
+        </div>
+        <br/>
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+<br/>
+<a asp-action="Index" asp-controller="BillPay">Back to my BillPay</a>

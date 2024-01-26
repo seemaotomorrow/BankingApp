@@ -1,4 +1,4 @@
-﻿namespace BankingApp.Utilities;
+﻿namespace BankingApp.Tools.Utilities;
 
 // Reference: RMIT WDT Week5-Lectorial McbaExample
 public static class MiscellaneousExtensionUtilities

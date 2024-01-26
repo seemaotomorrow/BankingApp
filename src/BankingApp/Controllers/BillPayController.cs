@@ -1,48 +1,56 @@
 using Microsoft.AspNetCore.Mvc;
 using BankingApp.Models;
-using BankingApp.Data;
-using System.Linq;
-using System.Threading.Tasks;
+using BankingApp.Filters;
+using BankingApp.Repositories;
+using BankingApp.ViewModels;
+
 namespace BankingApp.Controllers;
 
-public class BillPayController : Controller
+[AuthorizeCustomer]
+public class BillPayController(IBillPayRepository billPayRepository) : Controller
 {
-    
-    private readonly BankingAppContext _context;
+    private readonly IBillPayRepository _billPayRepository = billPayRepository;
+    private int CustomerID => HttpContext.Session.GetInt32(nameof(Customer.CustomerID)).Value;
 
-    public BillPayController(BankingAppContext context)
-    {
-        _context = context;
-    }
-                
     // show all BillPay record
     public async Task<IActionResult> Index()
     {
-        var billPays = _context.BillPays.ToList();
+        var billPays = billPayRepository.GetBillPaysForCustomer(CustomerID);
         return View(billPays);
     }
-
-    // creat new record
+    
     public IActionResult Create()
     {
-        return View();
+        var accountNumbers = billPayRepository.GetAccountNumbersForCurrentCustomer(CustomerID);
+        var payeeIDs = billPayRepository.GetPayeeIDs();
+        return View(
+            new CreateBillPayViewModel
+            {
+                AccountNumbers = accountNumbers,
+                PayeeIDs = payeeIDs
+            });
     }
-
-    // update new record
+    
+    // Schedule new billPay
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("AccountNumber,Amount,ScheduleTimeUtc,Period")] BillPay billPay)
+    public IActionResult Create(CreateBillPayViewModel model)
     {
-        if (ModelState.IsValid)
-        {
-            _context.Add(billPay);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-        return View(billPay);
-    }
+        // data annotation validation
+        if (!ModelState.IsValid)
+            return View(model);
 
+        billPayRepository.ScheduleBillPay(model.SelectedAccountNumber, model.SelectedPayeeID, 
+            model.Amount, model.ScheduleTimeUtc, model.Period); 
+        
+        return RedirectToAction(nameof(Index));
+    }
     
+    public IActionResult CancelBillPay(int billPayId)
+    {
+        _billPayRepository.CancelBillPay(billPayId);
+        return RedirectToAction("Index");
+    }
 }
 
 

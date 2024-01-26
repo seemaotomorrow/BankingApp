@@ -3,9 +3,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BankingApp.Models;
 
+public enum BillPayStatus
+{
+    Scheduled = 1,
+    Pending = 2,
+    Succeeded = 3,
+    Failed = 4,
+    Canceled = 5
+}
+
 public class BillPay
 {
-    //memo for lea: is an attribute in EF that specific how the database generates values for a particular property.
     public int BillPayID { get; set; }
     
     [ForeignKey("Account")]
@@ -13,7 +21,6 @@ public class BillPay
     public int AccountNumber { get; set; }
     public virtual Account Account { get; set; }
     
-    [ForeignKey("Payee")]
     public int PayeeID { get; set; } 
     public virtual Payee Payee { get; set; }
     
@@ -27,11 +34,9 @@ public class BillPay
     public DateTime ScheduleTimeUtc { get; set; } // Next scheduled date and time for the transaction to occur
 
     [Required(ErrorMessage = "Period is required")]
-    [StringLength(1)]
     [RegularExpression("^[OM]$", ErrorMessage = "Period must be 'O' or 'M'")]
-    //To represent whether the payment is a one-off or monthly payment
     public char Period { get; set; } //  (One-off 'O' or Monthly 'M')
-
-
+    
+    public BillPayStatus Status { get; set; }
 }
     

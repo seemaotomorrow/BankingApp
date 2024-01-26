@@ -1,25 +1,38 @@
-@model IEnumerable<BankingApp.Models.BillPay>
+@model IEnumerable<BillPay>
 
-<table class="table">
-    <thead>
-    <tr>
-        <th>BillPay ID</th>
-        <th>Account Number</th>
-        <th>Amount</th>
-        <th>Schedule Time</th>
-        <th>Period</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model)
-    {
+<div>
+    <h1 class="display-4">Bill Payment</h1>
+    <div>
+        <p>BPAY is an easy and secure way to pay and manage bills from your online banking</p>
+    </div>
+    <div>
+        <a asp-action="Create" asp-controller="BillPay" class="btn btn-primary btn-danger">Pay a Bill</a>
+    </div>
+    <div>
+        <h3>Scheduled Payments</h3>
+    </div>
+    <table class="table">
+        <thead>
         <tr>
-            <td>@item.BillPayID</td>
-            <td>@item.AccountNumber</td>
-            <td>@item.Amount</td>
-            <td>@item.ScheduleTimeUtc</td>
-            <td>@item.Period</td>
+            <th>BillPay ID</th>
+            <th>Account Number</th>
+            <th>Amount</th>
+            <th>Schedule Time</th>
+            <th>Period</th>
         </tr>
-    }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.BillPayID</td>
+                <td>@item.AccountNumber</td>
+                <td>@item.Amount</td>
+                <td>@item.ScheduleTimeUtc</td>
+                <td>@item.Period</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+</div>
