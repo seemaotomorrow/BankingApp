@@ -1,0 +1,19 @@
+- Controllers
+  - HomeController.cs
+  - AdminController.cs
+  - AccountController.cs
+- Models
+  - CustomerViewModel.cs
+  - LoginViewModel.cs
+- Views
+  - Home
+    - Index.cshtml
+  - Admin
+    - Index.cshtml
+    - EditCustomer.cshtml
+  - Account
+    - Login.cshtml
+- wwwroot
+  - ... (static files)
+- appsettings.json
+- Program.cs
