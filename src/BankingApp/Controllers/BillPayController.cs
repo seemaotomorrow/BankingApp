@@ -56,6 +56,7 @@ public class BillPayController(IBillPayRepository billPayRepository) : Controlle
             return View(model);
         }
 
+        // Convert user input local time to UTC time
         var utcTime = model.ScheduleTimeUtc.ToUniversalTime();
         
         billPayRepository.ScheduleBillPay(model.SelectedAccountNumber, model.SelectedPayeeID, 
