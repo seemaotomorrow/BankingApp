@@ -13,6 +13,6 @@ public class BankingAppContext : DbContext
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<Payee> Payees { get; set; }
-    public DbSet<BillPay> BillPays { get; set; }
+    
     
 }

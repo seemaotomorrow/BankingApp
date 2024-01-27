@@ -39,6 +39,6 @@ public class Customer
     [NotMapped]
     public Login Login { get; set; }
 
-    public bool IsLoginLocked { get; set; }
+    // public bool IsLoginLocked { get; set; }
     
 }

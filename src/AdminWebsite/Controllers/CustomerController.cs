@@ -3,25 +3,28 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using AdminWebsite.Models; 
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Diagnostics;
+
 
 namespace AdminWebsite.Controllers;
 
 public class CustomersController : Controller
 {
     private readonly IHttpClientFactory _clientFactory;
-    private HttpClient Client => _clientFactory.CreateClient("api");
+    private readonly ILogger<CustomersController> _logger;
+    private HttpClient Client => _clientFactory.CreateClient("apiEndpoint");
 
-    public CustomersController(IHttpClientFactory clientFactory)
+    public CustomersController(IHttpClientFactory clientFactory,ILogger<CustomersController> logger)
     {
         _clientFactory = clientFactory;
+        _logger = logger;
     }
+
 
     // GET: Customers/Index
     public async Task<IActionResult> Index()
     {
-        var response = await Client.GetAsync("api/customers");
+        var response = await Client.GetAsync("/api/Customer/");
         if (!response.IsSuccessStatusCode)
             throw new Exception();
 
@@ -131,12 +134,13 @@ public class CustomersController : Controller
         // Send the request to the Web API
         var response = await Client.PutAsync(requestUrl, requestBody);
 
-        if (!response.IsSuccessStatusCode)
-        {
-            // Handle error response from the API
-            // Log the error, display a message, etc.
-            return View("Error"); 
+        if (!response.IsSuccessStatusCode) {
+            // Log the error for debugging
+            _logger.LogError("Error fetching customer data: {StatusCode}", response.StatusCode);
+            // Return a user-friendly error message
+            return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
 
         // Redirect back to the list of customers after successful update
         return RedirectToAction("Index");

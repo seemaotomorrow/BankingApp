@@ -18,15 +18,18 @@ public class CustomerController : ControllerBase
 
     // GET: api/customer
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Customer>>> GetAll()
+    public async Task<ActionResult<List<CustomerTest>>> GetAll()
     {
+        //model customer
+        //customerId,name......
         var customers = await _customerRepository.GetAllAsync();
+        
         return Ok(customers);
     }
 
     // GET api/customer/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<Customer>> Get(int id)
+    public async Task<ActionResult<CustomerTest>> Get(int id)
     {
         var customer = await _customerRepository.GetByIdAsync(id);
         if (customer == null)
@@ -38,20 +41,20 @@ public class CustomerController : ControllerBase
 
     // POST api/customer
     [HttpPost]
-    public async Task<ActionResult<Customer>> Post([FromBody] Customer customer)
+    public async Task<ActionResult<CustomerTest>> Post([FromBody] CustomerTest customer)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        await _customerRepository.AddAsync(customer);
+        // await _customerRepository.AddAsync(customer);
         return CreatedAtAction(nameof(Get), new { id = customer.CustomerID}, customer);
     }
 
     // PUT api/customer/5
     [HttpPut("{id}")]
-    public async Task<ActionResult> Put(int id, [FromBody] Customer customer)
+    public async Task<ActionResult> Put(int id, [FromBody] CustomerTest customer)
     {
         if (id != customer.CustomerID)
         {
@@ -64,7 +67,7 @@ public class CustomerController : ControllerBase
             return NotFound();
         }
 
-        await _customerRepository.UpdateAsync(customer);
+        // await _customerRepository.UpdateAsync(customer);
         return NoContent();
     }
 

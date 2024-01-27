@@ -9,7 +9,13 @@ public class AccountTypeStringToAccountTypeEnumConverter : JsonConverter<Account
 {
     public override void WriteJson(JsonWriter writer, AccountType value, JsonSerializer serializer)
     {
-        throw new NotImplementedException();
+        string typeStr = value switch
+        {
+            AccountType.Saving => "S",
+            AccountType.Checking => "C",
+            _ => throw new InvalidOperationException($"Unknown AccountType: {value}")
+        };
+        writer.WriteValue(typeStr);
     }
 
     public override AccountType ReadJson(JsonReader reader, Type objectType, AccountType existingValue,

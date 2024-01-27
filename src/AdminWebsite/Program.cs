@@ -4,15 +4,17 @@ using System.Net.Mime;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
-builder.Services.AddAuthentication();
 
-builder.Services.AddHttpClient("api", client =>
+// Configure api client
+builder.Services.AddHttpClient("apiEndpoint", client =>
 {
     client.BaseAddress = new Uri("http://localhost:5282");
     client.DefaultRequestHeaders.Accept.Add(
         new MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
 });
+
+builder.Services.AddControllersWithViews();
+builder.Services.AddAuthentication();
 
 var app = builder.Build();
 
@@ -31,6 +33,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 app.UseAuthentication();
+app.MapDefaultControllerRoute();
 
 app.MapControllerRoute(
     name: "default",

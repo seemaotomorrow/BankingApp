@@ -8,10 +8,10 @@ namespace AdminWebAPI.Repositories;
 
 public interface ICustomerRepository
 {
-    Task<IEnumerable<Customer>> GetAllAsync();
+    Task<List<CustomerTest>> GetAllAsync();
     Task<Customer> GetByIdAsync(int customerId);
-    Task AddAsync(Customer customer);
-    Task UpdateAsync(Customer customer);
+    // Task AddAsync(CustomerTest customer);
+    // Task UpdateAsync(CustomerTest customer);
     Task DeleteAsync(int customerId);
     Task LockOrUnlockCustomerAsync(int customerId, bool isLocked);
    
@@ -26,9 +26,33 @@ public class CustomerRepository : ICustomerRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<Customer>> GetAllAsync()
+    public async Task<List<CustomerTest>> GetAllAsync()
     {
-        return await _context.Customers.ToListAsync();
+        var customers = new List<CustomerTest>();
+
+        var customerDB = await _context.Customers.ToListAsync();
+        if(customerDB !=null)
+        {
+           foreach (var item in customerDB)
+           {
+            var customer = new CustomerTest
+            {
+                CustomerID = item.CustomerID,
+                Name = item.Name,
+                Address = item.Address,
+                City = item.City,
+                Mobile = item.Mobile,
+                PostCode = item.PostCode,
+                State = item.State,
+                TFN = item.TFN
+            };
+
+            customers.Add(customer);
+           }
+        }
+       
+      
+        return customers;
     }
 
     public async Task<Customer> GetByIdAsync(int customerId)
@@ -36,17 +60,17 @@ public class CustomerRepository : ICustomerRepository
         return await _context.Customers.FirstOrDefaultAsync(c => c.CustomerID == customerId);
     }
 
-    public async Task AddAsync(Customer customer)
-    {
-        _context.Customers.Add(customer);
-        await _context.SaveChangesAsync();
-    }
+    // public async Task AddAsync(CustomerTest customer)
+    // {
+    //     _context.Customers.Add(customer);
+    //     await _context.SaveChangesAsync();
+    // }
 
-    public async Task UpdateAsync(Customer customer)
-    {
-        _context.Customers.Update(customer);
-        await _context.SaveChangesAsync();
-    }
+    // public async Task UpdateAsync(CustomerTest customer)
+    // {
+    //     _context.Customers.Update(customer);
+    //     await _context.SaveChangesAsync();
+    // }
 
     public async Task DeleteAsync(int customerId)
     {
@@ -63,7 +87,7 @@ public class CustomerRepository : ICustomerRepository
         var customer = await _context.Customers.FindAsync(customerId);
         if (customer != null)
         {
-            customer.IsLoginLocked = isLocked;
+            // customer.IsLoginLocked = isLocked;
             _context.Customers.Update(customer);
             await _context.SaveChangesAsync();
         }
