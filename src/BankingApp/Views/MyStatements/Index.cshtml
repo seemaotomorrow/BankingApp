@@ -15,7 +15,6 @@
         {
             <li>
                 Account Number: @account.AccountNumber - Balance: @account.Balance.ToString("0.00")
-                
             </li>
         }
     </ul>
@@ -46,7 +45,7 @@
                     <td>@transaction.AccountNumber</td>
                     <td>@(transaction.DestinationAccountNumber.HasValue ? transaction.DestinationAccountNumber.Value.ToString() : "N/A")</td>
                     <td>@transaction.Amount.ToString("0.00")</td>
-                    <td>@transaction.TransactionTimeUtc</td>
+                    <td>@transaction.TransactionTimeUtc.ToLocalTime()</td>
                     <td>@transaction.Comment</td>
                 </tr>
             }

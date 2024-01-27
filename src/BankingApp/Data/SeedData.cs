@@ -54,6 +54,46 @@ public static class SeedData
                 context.Accounts.Add(account);
             }
         }
+        
+        // Hard code Payees data
+        context.Payees.AddRange(
+            new Payee
+            {
+                Name = "Water Company",
+                Address = "123 Main Street",
+                City = "Sydney",
+                Phone = "0434567890",
+                Postcode = "2000",
+                State = "NSW"
+            },
+            new Payee
+            {
+                Name = "Electric Company",
+                Address = "456 Elm Street",
+                City = "Melbourne",
+                Phone = "0987654321",
+                Postcode = "3000",
+                State = "VIC"
+            },
+            new Payee
+            {
+                Name = "Telstra",
+                Address = "789 Maple Avenue",
+                City = "Brisbane",
+                Phone = "0456789123",
+                Postcode = "4000",
+                State = "QLD"
+            },
+            new Payee
+            {
+                Name = "Origin Hot Water",
+                Address = "101 Oak Street",
+                City = "Perth",
+                Phone = "0865432190",
+                Postcode = "6000",
+                State = "WA"
+            });
+        
         context.SaveChanges();
     }
 }

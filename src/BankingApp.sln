@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankingApp", "BankingApp\BankingApp.csproj", "{08DB6802-3E3E-419F-95E5-AC2EC999B957}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankingApp.Tools", "BankingApp.Tools\BankingApp.Tools.csproj", "{75CE5340-5091-4ACC-875E-B398FD3ECF1C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{08DB6802-3E3E-419F-95E5-AC2EC999B957}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08DB6802-3E3E-419F-95E5-AC2EC999B957}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08DB6802-3E3E-419F-95E5-AC2EC999B957}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75CE5340-5091-4ACC-875E-B398FD3ECF1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75CE5340-5091-4ACC-875E-B398FD3ECF1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75CE5340-5091-4ACC-875E-B398FD3ECF1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75CE5340-5091-4ACC-875E-B398FD3ECF1C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
