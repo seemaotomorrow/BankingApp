@@ -6,7 +6,7 @@
         <p>BPAY is an easy and secure way to pay and manage bills from your online banking</p>
     </div>
     <div>
-        <a asp-action="Create" asp-controller="BillPay" class="btn btn-primary btn-danger">Pay a Bill</a>
+        <a asp-action="Create" asp-controller="BillPay" class="btn btn-primary btn-danger">Schedule a New BillPayment</a>
     </div>
     <div>
         <h3>Scheduled Bill Payments</h3>
@@ -26,7 +26,7 @@
                 <td>@billPay.BillPayID</td>
                 <td>@billPay.AccountNumber</td>
                 <td>@billPay.Amount.ToString("0.00")</td>
-                <td>@billPay.ScheduleTimeUtc</td>
+                <td>@billPay.ScheduleTimeUtc.ToLocalTime()</td>
                 <td>@billPay.Period</td>
                 <td>
                     <a class="btn btn-primary" asp-controller="BillPay"
@@ -54,7 +54,7 @@
                  <td>@billPay.BillPayID</td>
                  <td>@billPay.AccountNumber</td>
                  <td>@billPay.Amount.ToString("0.00")</td>
-                 <td>@billPay.ScheduleTimeUtc</td>
+                 <td>@billPay.ScheduleTimeUtc.ToLocalTime()</td>
                  <td>@billPay.Period</td>
              </tr>
          }

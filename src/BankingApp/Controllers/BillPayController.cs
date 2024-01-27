@@ -27,6 +27,8 @@ public class BillPayController(IBillPayRepository billPayRepository) : Controlle
     {
         var accountNumbers = billPayRepository.GetAccountNumbersForCurrentCustomer(CustomerID);
         var payeeIDs = billPayRepository.GetPayeeIDs();
+        
+        // Initialize the view model with dropdown list data
         return View(
             new CreateBillPayViewModel
             {
@@ -42,10 +44,22 @@ public class BillPayController(IBillPayRepository billPayRepository) : Controlle
     {
         // data annotation validation
         if (!ModelState.IsValid)
-            return View(model);
+        {
+            // If model state is not valid, re-fetch dropdown list data
+            var accountNumbers = billPayRepository.GetAccountNumbersForCurrentCustomer(CustomerID);
+            var payeeIDs = billPayRepository.GetPayeeIDs();
 
+            // Update the model with dropdown list data
+            model.AccountNumbers = accountNumbers;
+            model.PayeeIDs = payeeIDs;
+            
+            return View(model);
+        }
+
+        var utcTime = model.ScheduleTimeUtc.ToUniversalTime();
+        
         billPayRepository.ScheduleBillPay(model.SelectedAccountNumber, model.SelectedPayeeID, 
-            model.Amount, model.ScheduleTimeUtc, model.Period);
+            model.Amount, utcTime, model.Period);
         
         return RedirectToAction(nameof(Index));
     }
