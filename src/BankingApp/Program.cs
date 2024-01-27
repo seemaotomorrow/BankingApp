@@ -1,3 +1,4 @@
+using BankingApp.BackgroundServices;
 using BankingApp.Data;
 using BankingApp.Models;
 using BankingApp.Repositories;
@@ -16,9 +17,12 @@ builder.Services.AddHangfire(configuration => configuration
     .UseSimpleAssemblyNameTypeSerializer()
     .UseRecommendedSerializerSettings()
     .UseSqlServerStorage(builder.Configuration.GetConnectionString(nameof(BankingAppContext))));
+
 // Add the processing server as IHostedService
 builder.Services.AddHangfireServer();
-// Add framework services.
+builder.Services.AddTransient<IBillPayBackgroundService, BillPayBackgroundService>();
+
+// Add framework services. ??
 builder.Services.AddMvc();
 
 
@@ -60,18 +64,23 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Hangfire Configuration
 // HTTPS Pipeline configuration
 app.UseHttpsRedirection();
-app.UseStaticFiles(); //This is wwwroot files
+app.UseStaticFiles(); 
 
+// Hangfire and dashboard to visualise background job
 app.UseHangfireDashboard();
-app.UseHangfireServer();
+app.MapHangfireDashboard();
+
+// https://www.freeformatter.com/cron-expression-generator-quartz.html
+// Run Every minute
+// RecurringJob.AddOrUpdate<IBillPayBackgroundService>(x => x.ProcessPendingBillPays(), "0 * * ? * *");
+RecurringJob.AddOrUpdate<IBillPayBackgroundService>("ProcessPendingBillPays", 
+    x => x.ProcessPendingBillPays(), Cron.MinuteInterval(1));
 
 app.UseRouting();
 app.UseAuthorization();
 app.UseSession();
-
 app.MapDefaultControllerRoute();
 app.UseEndpoints(endpoints =>
 {

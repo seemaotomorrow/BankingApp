@@ -11,6 +11,8 @@ public interface IBillPayRepository
     void CompleteBillPay(int billPayId);
     IEnumerable<BillPay> GetScheduledBillPaysForCustomer(int customerID);
     IEnumerable<BillPay> GetPendingBillPays();
+    IEnumerable<BillPay> GetFailedBillPaysForCustomer(int customerID);
+
 
     SelectList GetAccountNumbersForCurrentCustomer(int customerID);
     SelectList GetPayeeIDs();

@@ -5,11 +5,11 @@ namespace BankingApp.Models;
 
 public enum BillPayStatus
 {
+    // the bill payment has been scheduled but has not yet been processed.
     Scheduled = 1,
-    Pending = 2,
-    Succeeded = 3,
-    Failed = 4,
-    Canceled = 5
+    Succeeded = 2,
+    Failed = 3,
+    // Canceled = 4
 }
 
 public class BillPay

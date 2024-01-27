@@ -9,10 +9,9 @@
         <a asp-action="Create" asp-controller="BillPay" class="btn btn-primary btn-danger">Pay a Bill</a>
     </div>
     <div>
-        <h3>Scheduled Payments</h3>
+        <h3>Scheduled Bill Payments</h3>
     </div>
     <table class="table">
-        @* <thead> *@
         <tr>
             <th>BillPay ID</th>
             <th>Account Number</th>
@@ -20,9 +19,8 @@
             <th>Schedule Time</th>
             <th>Period</th>
         </tr>
-        @* </thead> *@
         <tbody>
-        @foreach (var billPay in Model)
+        @foreach (var billPay in Model.Where(bp => bp.Status == BillPayStatus.Scheduled))
         {
             <tr>
                 <td>@billPay.BillPayID</td>
@@ -31,12 +29,35 @@
                 <td>@billPay.ScheduleTimeUtc</td>
                 <td>@billPay.Period</td>
                 <td>
-                     <a class="btn btn-primary" asp-controller="BillPay"
-                        asp-action="Cancel" asp-route-billPayId="@billPay.BillPayID">Cancel</a>
+                    <a class="btn btn-primary" asp-controller="BillPay"
+                       asp-action="Cancel" asp-route-billPayId="@billPay.BillPayID">Cancel</a>
                 </td>
             </tr>
         }
         </tbody>
     </table>
-
+    <div>
+        <h3>Failed Bill Payments</h3>
+    </div>
+     <table class="table">
+         <tr>
+             <th>BillPay ID</th>
+             <th>Account Number</th>
+             <th>Amount</th>
+             <th>Schedule Time</th>
+             <th>Period</th>
+         </tr>
+         <tbody>
+         @foreach (var billPay in Model.Where(bp => bp.Status == BillPayStatus.Failed))
+         {
+             <tr>
+                 <td>@billPay.BillPayID</td>
+                 <td>@billPay.AccountNumber</td>
+                 <td>@billPay.Amount.ToString("0.00")</td>
+                 <td>@billPay.ScheduleTimeUtc</td>
+                 <td>@billPay.Period</td>
+             </tr>
+         }
+         </tbody>
+     </table>
 </div>

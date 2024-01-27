@@ -1,22 +1,26 @@
+using BankingApp.BackgroundServices;
 using Microsoft.AspNetCore.Mvc;
 using BankingApp.Models;
 using BankingApp.Filters;
 using BankingApp.Repositories;
 using BankingApp.ViewModels;
+using Hangfire;
 
 namespace BankingApp.Controllers;
 
 [AuthorizeCustomer]
 public class BillPayController(IBillPayRepository billPayRepository) : Controller
 {
-    private readonly IBillPayRepository _billPayRepository = billPayRepository;
     private int CustomerID => HttpContext.Session.GetInt32(nameof(Customer.CustomerID)).Value;
 
     // show all BillPay record
     public async Task<IActionResult> Index()
     {
         var billPays = billPayRepository.GetScheduledBillPaysForCustomer(CustomerID);
-        return View(billPays);
+        var failedBillPays = billPayRepository.GetFailedBillPaysForCustomer(CustomerID);
+        // Combine both lists
+        var allBillPays = billPays.Concat(failedBillPays);
+        return View(allBillPays);
     }
     
     public IActionResult Create()
@@ -41,7 +45,7 @@ public class BillPayController(IBillPayRepository billPayRepository) : Controlle
             return View(model);
 
         billPayRepository.ScheduleBillPay(model.SelectedAccountNumber, model.SelectedPayeeID, 
-            model.Amount, model.ScheduleTimeUtc, model.Period); 
+            model.Amount, model.ScheduleTimeUtc, model.Period);
         
         return RedirectToAction(nameof(Index));
     }
@@ -60,6 +64,7 @@ public class BillPayController(IBillPayRepository billPayRepository) : Controlle
     public IActionResult CancelConfirmed(int billPayID)
     {
         billPayRepository.CancelBillPay(billPayID);
+
         return RedirectToAction("Index");
     }
 }
