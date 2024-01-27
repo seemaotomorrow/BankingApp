@@ -5,7 +5,6 @@ using BankingApp.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Hangfire;
-using Hangfire.SqlServer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,8 +21,8 @@ builder.Services.AddHangfire(configuration => configuration
 builder.Services.AddHangfireServer();
 builder.Services.AddTransient<IBillPayBackgroundService, BillPayBackgroundService>();
 
-// Add framework services. ??
-builder.Services.AddMvc();
+// Add framework services.
+// builder.Services.AddMvc();
 
 
 // Add services to the container.
@@ -72,9 +71,7 @@ app.UseStaticFiles();
 app.UseHangfireDashboard();
 app.MapHangfireDashboard();
 
-// https://www.freeformatter.com/cron-expression-generator-quartz.html
 // Run Every minute
-// RecurringJob.AddOrUpdate<IBillPayBackgroundService>(x => x.ProcessPendingBillPays(), "0 * * ? * *");
 RecurringJob.AddOrUpdate<IBillPayBackgroundService>("ProcessPendingBillPays", 
     x => x.ProcessPendingBillPays(), Cron.MinuteInterval(1));
 

@@ -14,14 +14,4 @@ public class ValidateDateUtilities : ValidationAttribute
 
         return false; // Return false if the value is not a DateTime
     }
-    
-    public static bool IsFuture(DateTime date)
-    {
-        return date > DateTime.UtcNow;
-    }
-
-    public static bool IsNow(DateTime date)
-    {
-        return date == DateTime.UtcNow;
-    }
 }
