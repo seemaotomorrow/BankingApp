@@ -4,6 +4,7 @@ using BankingApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankingApp.Migrations
 {
     [DbContext(typeof(BankingAppContext))]
-    partial class BankingAppContextModelSnapshot : ModelSnapshot
+    [Migration("20240127143253_init_2024_01_28")]
+    partial class init_2024_01_28
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,9 +73,6 @@ namespace BankingApp.Migrations
 
                     b.Property<DateTime>("ScheduleTimeUtc")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
 
                     b.HasKey("BillPayID");
 

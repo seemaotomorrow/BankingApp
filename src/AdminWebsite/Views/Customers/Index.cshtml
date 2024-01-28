@@ -1,0 +1,51 @@
+@model IEnumerable<AdminWebsite.Models.CustomerDto>
+
+<h2>Customers</h2>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>TFN</th>
+        <th>Address</th>
+        <th>City</th>
+        <th>State</th>
+        <th>Postcode</th>
+        <th>Mobile</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.Name)</td>
+            <td>@Html.DisplayFor(modelItem => item.TFN)</td>
+            <td>@Html.DisplayFor(modelItem => item.Address)</td>
+            <td>@Html.DisplayFor(modelItem => item.City)</td>
+            <td>@Html.DisplayFor(modelItem => item.State)</td>
+            <td>@Html.DisplayFor(modelItem => item.PostCode)</td>
+            <td>@Html.DisplayFor(modelItem => item.Mobile)</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CustomerID">Edit</a>
+                @* @Html.ActionLink("Edit", "Edit", new { id = item.CustomerID }) | *@
+                @* @Html.ActionLink("Delete", "Delete", new { id = item.CustomerID }) | *@
+                <!-- Lock/Unlock Button -->
+                <form asp-action="LockUnlockCustomer" method="post" style="display:inline;">
+                    <input type="hidden" name="customerId" value="@item.CustomerID"/>
+                    <input type="hidden" name="lockAccount" value="@(item.IsLocked ? "false" : "true")"/>
+                    <button type="submit" class="btn btn-sm @(item.IsLocked ? "btn-success" : "btn-danger")">
+                        @(item.IsLocked ? "Unlock" : "Lock")
+                    </button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@Html.ActionLink("Create New", "Create")
+
+
+
+      
