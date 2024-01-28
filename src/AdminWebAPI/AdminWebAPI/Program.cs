@@ -25,7 +25,7 @@ builder.Services.AddDbContext<BankingAppContext>(options =>
         });
 
 
-builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<CustomerRepository>();
 builder.Services.AddScoped<ILoginRepository, LoginRepository>();
 
 

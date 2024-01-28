@@ -1,7 +1,8 @@
 
-using AdminWebAPI.Repositories;
 using AdminWebAPI.Models;
+using AdminWebAPI.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace AdminWebAPI.Controllers;
 
@@ -9,9 +10,9 @@ namespace AdminWebAPI.Controllers;
 [Route("api/[controller]")]
 public class CustomerController : ControllerBase
 {
-    private readonly ICustomerRepository _customerRepository;
+    private readonly CustomerRepository _customerRepository;
 
-    public CustomerController(ICustomerRepository customerRepository)
+    public CustomerController(CustomerRepository customerRepository)
     {
         _customerRepository = customerRepository;
     }
@@ -20,8 +21,6 @@ public class CustomerController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<CustomerTest>>> GetAll()
     {
-        //model customer
-        //customerId,name......
         var customers = await _customerRepository.GetAllAsync();
         
         return Ok(customers);
@@ -29,14 +28,9 @@ public class CustomerController : ControllerBase
 
     // GET api/customer/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<CustomerTest>> Get(int id)
+    public CustomerTest Get(int id)
     {
-        var customer = await _customerRepository.GetByIdAsync(id);
-        if (customer == null)
-        {
-            return NotFound();
-        }
-        return Ok(customer);
+        return _customerRepository.GetByIdAsync(id);
     }
 
     // POST api/customer
@@ -48,7 +42,6 @@ public class CustomerController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        // await _customerRepository.AddAsync(customer);
         return CreatedAtAction(nameof(Get), new { id = customer.CustomerID}, customer);
     }
 
@@ -61,28 +54,24 @@ public class CustomerController : ControllerBase
             return BadRequest();
         }
 
-        var existingCustomer = await _customerRepository.GetByIdAsync(id);
+        var existingCustomer = _customerRepository.GetByIdAsync(id);
         if (existingCustomer == null)
         {
             return NotFound();
         }
 
-        // await _customerRepository.UpdateAsync(customer);
+        await _customerRepository.UpdateAsync(customer);
         return NoContent();
     }
-
-    // DELETE api/customer/5
-    [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete(int id)
+    
+    [HttpPut("CustomerLock")]
+    public async Task<ActionResult> Lock([FromBody] CustomerModel.CustomerLock customer)
     {
-        var existingCustomer = await _customerRepository.GetByIdAsync(id);
-        if (existingCustomer == null)
-        {
-            return NotFound();
-        }
-
-        await _customerRepository.DeleteAsync(id);
-        return NoContent();
+        //if token is invalid
+        // make validation
+       
+        await _customerRepository.LockOrUnlockCustomerAsync(customer.CustomerId);
+        return Ok();
     }
 }
 

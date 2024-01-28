@@ -17,4 +17,6 @@ public class Login
     [StringLength(94)]
     [Column(TypeName = "char(94)")] //Defines the column type and length in the database
     public string PasswordHash { get; set; }
+
+    public bool isLocked { get; set; }
 }
