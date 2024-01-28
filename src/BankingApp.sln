@@ -2,9 +2,12 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankingApp", "BankingApp\BankingApp.csproj", "{08DB6802-3E3E-419F-95E5-AC2EC999B957}"
 EndProject
+
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminWebAPI", "AdminWebAPI\AdminWebAPI\AdminWebAPI.csproj", "{0F8FE8A2-7C5B-4625-8501-18AF50DBF169}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminWebsite", "AdminWebsite\AdminWebsite.csproj", "{EB2F53FA-88A1-4C7A-8B26-52936E9B1C4E}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankingApp.Tools", "BankingApp.Tools\BankingApp.Tools.csproj", "{75CE5340-5091-4ACC-875E-B398FD3ECF1C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +27,10 @@ Global
 		{EB2F53FA-88A1-4C7A-8B26-52936E9B1C4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB2F53FA-88A1-4C7A-8B26-52936E9B1C4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB2F53FA-88A1-4C7A-8B26-52936E9B1C4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75CE5340-5091-4ACC-875E-B398FD3ECF1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75CE5340-5091-4ACC-875E-B398FD3ECF1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75CE5340-5091-4ACC-875E-B398FD3ECF1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75CE5340-5091-4ACC-875E-B398FD3ECF1C}.Release|Any CPU.Build.0 = Release|Any CPU
+
 	EndGlobalSection
 EndGlobal

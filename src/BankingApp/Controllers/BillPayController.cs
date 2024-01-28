@@ -1,52 +1,89 @@
+using BankingApp.BackgroundServices;
 using Microsoft.AspNetCore.Mvc;
 using BankingApp.Models;
-using BankingApp.Data;
-using System.Linq;
-using System.Threading.Tasks;
+using BankingApp.Filters;
+using BankingApp.Repositories;
+using BankingApp.ViewModels;
+using Hangfire;
+
 namespace BankingApp.Controllers;
 
-public class BillPayController : Controller
+[AuthorizeCustomer]
+public class BillPayController(IBillPayRepository billPayRepository) : Controller
 {
-    
-    private readonly BankingAppContext _context;
+    private int CustomerID => HttpContext.Session.GetInt32(nameof(Customer.CustomerID)).Value;
 
-    public BillPayController(BankingAppContext context)
-    {
-        _context = context;
-    }
-                
     // show all BillPay record
     public async Task<IActionResult> Index()
     {
-        var billPays = _context.BillPays.ToList();
-        return View(billPays);
+        var billPays = billPayRepository.GetScheduledBillPaysForCustomer(CustomerID);
+        var failedBillPays = billPayRepository.GetFailedBillPaysForCustomer(CustomerID);
+        // Combine both lists
+        var allBillPays = billPays.Concat(failedBillPays);
+        return View(allBillPays);
     }
-
-    // creat new record
+    
     public IActionResult Create()
     {
-        return View();
+        var accountNumbers = billPayRepository.GetAccountNumbersForCurrentCustomer(CustomerID);
+        var payeeIDs = billPayRepository.GetPayeeIDs();
+        
+        // Initialize the view model with dropdown list data
+        return View(
+            new CreateBillPayViewModel
+            {
+                AccountNumbers = accountNumbers,
+                PayeeIDs = payeeIDs
+            });
     }
-
-    // update new record
+    
+    // Schedule new billPay
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("AccountNumber,Amount,ScheduleTimeUtc,Period")] BillPay billPay)
+    public IActionResult Create(CreateBillPayViewModel model)
     {
-        if (ModelState.IsValid)
+        // data annotation validation
+        if (!ModelState.IsValid)
         {
-            _context.Add(billPay);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-        return View(billPay);
-    }
+            // If model state is not valid, re-fetch dropdown list data
+            var accountNumbers = billPayRepository.GetAccountNumbersForCurrentCustomer(CustomerID);
+            var payeeIDs = billPayRepository.GetPayeeIDs();
 
+            // Update the model with dropdown list data
+            model.AccountNumbers = accountNumbers;
+            model.PayeeIDs = payeeIDs;
+            
+            return View(model);
+        }
+
+        // Convert user input local time to UTC time
+        var utcTime = model.ScheduleTimeUtc.ToUniversalTime();
+        
+        billPayRepository.ScheduleBillPay(model.SelectedAccountNumber, model.SelectedPayeeID, 
+            model.Amount, utcTime, model.Period);
+        
+        return RedirectToAction(nameof(Index));
+    }
     
+    public async Task<IActionResult> Cancel(int billPayID)
+    {
+        if (billPayID == null)
+            return NotFound();
+        var billPayment = billPayRepository.GetBillPay(billPayID);
+        
+        return View(billPayment);
+    }
+    
+    [HttpPost, ActionName("CancelConfirmed")]
+    [ValidateAntiForgeryToken]
+    public IActionResult CancelConfirmed(int billPayID)
+    {
+        billPayRepository.CancelBillPay(billPayID);
+
+        return RedirectToAction("Index");
+    }
 }
 
-
-// Check the bIllpay table for rows that need to be
 // processed, select the row that are scheduled to be paid;
 // i.e., comparing dtaTime,UtcNow to scheduletimeUtc
 // - process the bill

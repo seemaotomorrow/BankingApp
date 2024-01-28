@@ -7,6 +7,7 @@ public class Login
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     [Required]
     [StringLength(8)]
+    // To do: Data annotation: 8 digits
     public string LoginID { get; set; }
 
     [Required]

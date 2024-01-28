@@ -38,14 +38,6 @@ public class Transaction
     [Required]
     [Column(TypeName = "datetime2")]
     public DateTime TransactionTimeUtc { get; set; }
-    
-    // [NotMapped]
-    // public decimal? ServiceCharge => TransactionType == TransactionType.Withdraw ? 0.05M :
-    //     TransactionType == TransactionType.TransferOut ? 0.1M : 0;
-    //
-    // [NotMapped]
-    // public decimal Total => -(Amount + (ServiceCharge ?? 0));
-      
 }
 
 
