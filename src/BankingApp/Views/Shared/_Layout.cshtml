@@ -32,12 +32,6 @@
                                 <a class="nav-link text-dark" asp-controller="MyProfile" asp-action="Index">My Profile</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="MyStatements" asp-action="MyStatement">My Statements</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="BillPay" asp-action="Index">BillPay</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Login" asp-action="Logout">Logout</a>
                             </li>
                             
@@ -57,6 +51,12 @@
                         @if(isLoggedIn) {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Customer" asp-action="Index">My Accounts</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="MyStatements" asp-action="MyStatement">My Statements</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="BillPay" asp-action="Index">BillPay</a>
                             </li>
                         }
                     </ul>
