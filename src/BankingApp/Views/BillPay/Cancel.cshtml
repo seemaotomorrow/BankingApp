@@ -36,7 +36,18 @@
             @Html.DisplayNameFor(model => model.Period)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Period)
+            @if (Model.Period == 'O')
+            {
+                <text>One-off</text>
+            }
+            else if (Model.Period == 'M')
+            {
+                <text>Monthly</text>
+            }
+            else
+            {
+                <text>Unknown</text>
+            }
         </dd>
 
     </dl>
