@@ -32,7 +32,6 @@ public class Payee
     [StringLength(14)]
     [RegularExpression(@"^\(0\d\)\s\d{4}\s\d{4}$", ErrorMessage = "Phone must be of the format: (0X) XXXX XXXX")]
     public string Phone { get; set; }
-    
 }
 
 

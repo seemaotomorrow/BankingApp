@@ -9,7 +9,6 @@ public enum BillPayStatus
     Scheduled = 1,
     Succeeded = 2,
     Failed = 3,
-    // Canceled = 4
 }
 
 public class BillPay
@@ -27,11 +26,11 @@ public class BillPay
     [Column(TypeName = "money")]
     [Required(ErrorMessage = "Amount is required")]
     [Range(0.01, double.MaxValue, ErrorMessage = "Amount must be a positive value")]
-    public decimal Amount { get; set; } // Amount of funds to be withdrawn from the account
+    public decimal Amount { get; set; } 
 
     [Required]
     [Column(TypeName = "datetime2")]
-    public DateTime ScheduleTimeUtc { get; set; } // Next scheduled date and time for the transaction to occur
+    public DateTime ScheduleTimeUtc { get; set; } 
 
     [Required(ErrorMessage = "Period is required")]
     [RegularExpression("^[OM]$", ErrorMessage = "Period must be 'O' or 'M'")]

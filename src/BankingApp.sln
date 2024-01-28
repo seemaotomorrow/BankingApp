@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminWebsite", "AdminWebsit
 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankingApp.Tools", "BankingApp.Tools\BankingApp.Tools.csproj", "{75CE5340-5091-4ACC-875E-B398FD3ECF1C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankingApp.Tests", "BankingApp.Tests\BankingApp.Tests.csproj", "{A602DBA5-7544-47A7-9A15-D6BB9AD0A34B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,9 @@ Global
 		{75CE5340-5091-4ACC-875E-B398FD3ECF1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75CE5340-5091-4ACC-875E-B398FD3ECF1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75CE5340-5091-4ACC-875E-B398FD3ECF1C}.Release|Any CPU.Build.0 = Release|Any CPU
-
+		{A602DBA5-7544-47A7-9A15-D6BB9AD0A34B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A602DBA5-7544-47A7-9A15-D6BB9AD0A34B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A602DBA5-7544-47A7-9A15-D6BB9AD0A34B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A602DBA5-7544-47A7-9A15-D6BB9AD0A34B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

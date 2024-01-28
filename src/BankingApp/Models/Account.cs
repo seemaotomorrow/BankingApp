@@ -19,8 +19,6 @@ public class Account
     public int AccountNumber { get; set; }
     
     [Required]
-    // [StringLength(1)]
-    // [RegularExpression("^[CS]$", ErrorMessage = "AccountType must be C or S")]
     [JsonConverter(typeof(AccountTypeStringToAccountTypeEnumConverter))]
     [Display(Name = "Type")]
     public AccountType AccountType { get; set; }

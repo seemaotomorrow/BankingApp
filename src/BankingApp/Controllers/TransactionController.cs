@@ -3,7 +3,6 @@ using BankingApp.Data;
 using BankingApp.Models;
 using BankingApp.Filters;
 using BankingApp.Tools.Utilities;
-using BankingApp.Utilities;
 using BankingApp.ViewModels;
 
 namespace BankingApp.Controllers;
