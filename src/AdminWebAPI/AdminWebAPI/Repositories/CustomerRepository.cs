@@ -6,18 +6,17 @@ using AdminWebAPI.Models;
 
 namespace AdminWebAPI.Repositories;
 
-public interface ICustomerRepository
+public interface ICustomerRepository<TEntity, TKey> where TEntity: class
 {
+    
     Task<List<CustomerTest>> GetAllAsync();
-    Task<Customer> GetByIdAsync(int customerId);
-    // Task AddAsync(CustomerTest customer);
-    // Task UpdateAsync(CustomerTest customer);
+    TEntity GetByIdAsync(int customerId);
+    Task UpdateAsync(CustomerTest customer);
     Task DeleteAsync(int customerId);
-    Task LockOrUnlockCustomerAsync(int customerId, bool isLocked);
-   
+    Task LockOrUnlockCustomerAsync(int customerId);
 }
 
-public class CustomerRepository : ICustomerRepository
+public class CustomerRepository : ICustomerRepository<CustomerTest, int>
 {
     private readonly BankingAppContext _context;
 
@@ -35,6 +34,7 @@ public class CustomerRepository : ICustomerRepository
         {
            foreach (var item in customerDB)
            {
+               var loginDB = await _context.Logins.FirstOrDefaultAsync(x => x.CustomerID == item.CustomerID);
             var customer = new CustomerTest
             {
                 CustomerID = item.CustomerID,
@@ -44,7 +44,9 @@ public class CustomerRepository : ICustomerRepository
                 Mobile = item.Mobile,
                 PostCode = item.PostCode,
                 State = item.State,
-                TFN = item.TFN
+                TFN = item.TFN,
+                IsLocked = loginDB.isLocked
+                
             };
 
             customers.Add(customer);
@@ -55,22 +57,38 @@ public class CustomerRepository : ICustomerRepository
         return customers;
     }
 
-    public async Task<Customer> GetByIdAsync(int customerId)
+    public CustomerTest GetByIdAsync(int customerId)
     {
-        return await _context.Customers.FirstOrDefaultAsync(c => c.CustomerID == customerId);
+        var item = _context.Customers.Find(customerId);
+        var customer = new CustomerTest
+        {
+            CustomerID = item.CustomerID,
+            Name = item.Name,
+            Address = item.Address,
+            City = item.City,
+            Mobile = item.Mobile,
+            PostCode = item.PostCode,
+            State = item.State,
+            TFN = item.TFN
+        };
+
+        return customer;
     }
 
-    // public async Task AddAsync(CustomerTest customer)
-    // {
-    //     _context.Customers.Add(customer);
-    //     await _context.SaveChangesAsync();
-    // }
-
-    // public async Task UpdateAsync(CustomerTest customer)
-    // {
-    //     _context.Customers.Update(customer);
-    //     await _context.SaveChangesAsync();
-    // }
+    public async Task UpdateAsync(CustomerTest customer)
+    {
+        var customerFromDB = _context.Customers.Find(customer.CustomerID);
+        
+        customerFromDB.Name = customer.Name;
+        customerFromDB.Address = customer.Address;
+        customerFromDB.TFN = customer.TFN;
+        customerFromDB.PostCode = customer.PostCode;
+        customerFromDB.Mobile = customer.Mobile;
+        customerFromDB.State = customer.State;
+        
+        _context.Customers.Update(customerFromDB);
+        await _context.SaveChangesAsync();
+    }
 
     public async Task DeleteAsync(int customerId)
     {
@@ -82,13 +100,14 @@ public class CustomerRepository : ICustomerRepository
         }
     }
 
-    public async Task LockOrUnlockCustomerAsync(int customerId, bool isLocked)
+    public async Task LockOrUnlockCustomerAsync(int customerId)
     {
-        var customer = await _context.Customers.FindAsync(customerId);
+        var customer = await _context.Logins.Where(x => x.CustomerID == customerId).FirstOrDefaultAsync();
+        // IsLoginLocked
         if (customer != null)
         {
-            // customer.IsLoginLocked = isLocked;
-            _context.Customers.Update(customer);
+            customer.isLocked = !customer.isLocked;
+            _context.Update(customer);
             await _context.SaveChangesAsync();
         }
     }

@@ -34,36 +34,13 @@ public class CustomersController : Controller
         return View(customers);
     }
 
-    // GET: Customers/Create
-    public IActionResult Create()
-    {
-        return View();
-    }
-
-    // POST: Customers/Create
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(CustomerDto customer)
-    {
-        if (ModelState.IsValid)
-        {
-            var content = new StringContent(JsonConvert.SerializeObject(customer), Encoding.UTF8, MediaTypeNames.Application.Json);
-            var response = await Client.PostAsync("api/customers", content);
-
-            if (response.IsSuccessStatusCode)
-                return RedirectToAction("Index");
-        }
-
-        return View(customer);
-    }
-
     // GET: Customers/Edit/1
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
             return NotFound();
 
-        var response = await Client.GetAsync($"api/customers/{id}");
+        var response = await Client.GetAsync($"api/customer/{id}");
         if (!response.IsSuccessStatusCode)
             throw new Exception();
 
@@ -84,7 +61,7 @@ public class CustomersController : Controller
         if (ModelState.IsValid)
         {
             var content = new StringContent(JsonConvert.SerializeObject(customer), Encoding.UTF8, MediaTypeNames.Application.Json);
-            var response = await Client.PutAsync($"api/customers/{id}", content);
+            var response = await Client.PutAsync($"api/customer/{id}", content);
 
             if (response.IsSuccessStatusCode)
                 return RedirectToAction("Index");
@@ -92,47 +69,24 @@ public class CustomersController : Controller
 
         return View(customer);
     }
-
-    // GET: Customers/Delete/1
-    public async Task<IActionResult> Delete(int? id)
-    {
-        if (id == null)
-            return NotFound();
-
-        var response = await Client.GetAsync($"api/customers/{id}");
-        if (!response.IsSuccessStatusCode)
-            throw new Exception();
-
-        var result = await response.Content.ReadAsStringAsync();
-        var customer = JsonConvert.DeserializeObject<CustomerDto>(result);
-
-        return View(customer);
-    }
-
-    // POST: Customers/Delete/1
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id)
-    {
-        var response = await Client.DeleteAsync($"api/customers/{id}");
-        if (response.IsSuccessStatusCode)
-            return RedirectToAction("Index");
-
-        return NotFound();
-    }
-    
     
     [HttpPost]
-    public async Task<IActionResult> LockUnlockCustomer(int customerId, bool lockAccount)
+    public async Task<IActionResult> LockUnlockCustomer(int customerId)
     {
         // Prepare the request URL and body
-        var requestUrl = $"api/customers/{customerId}/lockstatus"; // Adjust the URL as needed
+        var requestUrl = $"/api/Customer/CustomerLock"; // Adjust the URL as needed
+        var jsonInput = new CustomerModel.CustomerLock()
+        {
+            CustomerId  = customerId
+
+        };
         var requestBody = new StringContent(
-            JsonConvert.SerializeObject(new { IsLocked = lockAccount }),
+            JsonConvert.SerializeObject(jsonInput),
             Encoding.UTF8, "application/json");
 
         // Send the request to the Web API
-        var response = await Client.PutAsync(requestUrl, requestBody);
+      
+        var response = await Client.PutAsync(requestUrl,requestBody);
 
         if (!response.IsSuccessStatusCode) {
             // Log the error for debugging
@@ -149,7 +103,6 @@ public class CustomersController : Controller
 }
 
 
-//Note for lea: Ensure your WebAPI has the necessary endpoint to handle lock/unlock requests
-// especially around authentication and authorization to ensure that only authorized users can lock or unlock customer accounts.
+
 
 
