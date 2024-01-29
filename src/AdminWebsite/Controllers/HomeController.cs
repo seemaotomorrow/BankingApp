@@ -10,6 +10,7 @@ public class HomeController : Controller
     private readonly ILogger<HomeController> _logger;
     private readonly HttpClient _client;
     
+    
     public HomeController(ILogger<HomeController> logger, IHttpClientFactory clientFactory)
     {
         _logger = logger;

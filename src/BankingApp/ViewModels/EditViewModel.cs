@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using BankingApp.Tools.Utilities;
+
 namespace BankingApp.ViewModels;
 
 public class EditViewModel
@@ -20,6 +22,8 @@ public class EditViewModel
     [StringLength(3, MinimumLength = 2)]
     [RegularExpression(@"^[A-Z]{2,3}$", ErrorMessage = "State must be a 2 or 3 lettered Australian state")]
     public string? State { get; set; }
+    public Dictionary<string, string> States { get; set; } = AustralianStates.States;
+    
 
     [StringLength(4)]
     [RegularExpression(@"^\d{4}$", ErrorMessage = "Postcode must be 4 digits")]

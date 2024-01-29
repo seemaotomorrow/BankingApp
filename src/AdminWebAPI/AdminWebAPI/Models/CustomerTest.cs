@@ -1,4 +1,6 @@
-﻿namespace AdminWebAPI;
+﻿using BankingApp.Tools.Utilities;
+
+namespace AdminWebAPI;
 
 public class CustomerTest
 {
@@ -18,6 +20,7 @@ public class CustomerTest
 
 
     public string? State { get; set; }
+    //public Dictionary<string, string> States { get; set; } = AustralianStates.States;
 
   
 

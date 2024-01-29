@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using BankingApp.Models;
 using BankingApp.Data;
+using BankingApp.Tools.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using SimpleHashing.Net;
@@ -52,6 +53,7 @@ public class MyProfileController: Controller
             Address =customer.Address,
             City = customer.City,
             State = customer.State,
+            States = AustralianStates.States,
             PostCode = customer.PostCode,
             Mobile = customer.Mobile
         };

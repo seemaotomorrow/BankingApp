@@ -31,7 +31,7 @@ public class CustomerRepository : ICustomerRepository<CustomerTest, int>
 
         var customerDB = await _context.Customers.ToListAsync();
         if(customerDB !=null)
-        {
+    {
            foreach (var item in customerDB)
            {
                var loginDB = await _context.Logins.FirstOrDefaultAsync(x => x.CustomerID == item.CustomerID);

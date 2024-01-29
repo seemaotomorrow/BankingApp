@@ -14,7 +14,7 @@ public class CustomersController : Controller
     private readonly ILogger<CustomersController> _logger;
     private HttpClient Client => _clientFactory.CreateClient("apiEndpoint");
 
-    public CustomersController(IHttpClientFactory clientFactory,ILogger<CustomersController> logger)
+    public CustomersController(IHttpClientFactory clientFactory, ILogger<CustomersController> logger)
     {
         _clientFactory = clientFactory;
         _logger = logger;
@@ -60,7 +60,8 @@ public class CustomersController : Controller
 
         if (ModelState.IsValid)
         {
-            var content = new StringContent(JsonConvert.SerializeObject(customer), Encoding.UTF8, MediaTypeNames.Application.Json);
+            var content = new StringContent(JsonConvert.SerializeObject(customer), Encoding.UTF8,
+                MediaTypeNames.Application.Json);
             var response = await Client.PutAsync($"api/customer/{id}", content);
 
             if (response.IsSuccessStatusCode)
@@ -69,7 +70,7 @@ public class CustomersController : Controller
 
         return View(customer);
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> LockUnlockCustomer(int customerId)
     {
@@ -77,7 +78,7 @@ public class CustomersController : Controller
         var requestUrl = $"/api/Customer/CustomerLock"; // Adjust the URL as needed
         var jsonInput = new CustomerModel.CustomerLock()
         {
-            CustomerId  = customerId
+            CustomerId = customerId
 
         };
         var requestBody = new StringContent(
@@ -85,23 +86,23 @@ public class CustomersController : Controller
             Encoding.UTF8, "application/json");
 
         // Send the request to the Web API
-      
-        var response = await Client.PutAsync(requestUrl,requestBody);
 
-        if (!response.IsSuccessStatusCode) {
+        var response = await Client.PutAsync(requestUrl, requestBody);
+
+        if (!response.IsSuccessStatusCode)
+        {
             // Log the error for debugging
             _logger.LogError("Error fetching customer data: {StatusCode}", response.StatusCode);
             // Return a user-friendly error message
-            return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View("Error",
+                new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
 
         // Redirect back to the list of customers after successful update
         return RedirectToAction("Index");
     }
-
-}
-
+}           
 
 
 
