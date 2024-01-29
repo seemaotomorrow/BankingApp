@@ -8,8 +8,8 @@ public interface IAccountRepository
 {
     public Account? GetAccount(int accountNumber);
     public void UpdateAccount(Account account);
-
 }
+
 public class AccountRepository : IAccountRepository
 {
     private readonly BankingAppContext _context;
