@@ -53,13 +53,13 @@
     </table>
 
     <div>
-        Page @Model.Transactions.PageIndex of @Model.Transactions.TotalPages
-        
         @if (Model.Transactions.HasPreviousPage)
         {
             <a asp-action="MyStatement" asp-route-customerID="@Model.CustomerID" asp-route-page="@(Model.Transactions.PageIndex - 1)">Previous</a>
         }
-
+        
+        Page @Model.Transactions.PageIndex of @Model.Transactions.TotalPages
+        
         @if (Model.Transactions.HasNextPage)
         {
             <a asp-action="MyStatement" asp-route-customerID="@Model.CustomerID" asp-route-page="@(Model.Transactions.PageIndex + 1)">Next</a>

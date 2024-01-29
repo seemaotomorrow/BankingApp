@@ -5,6 +5,7 @@ namespace BankingApp.Models;
 public class Customer
 {
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    [Range(1000, 9999, ErrorMessage = "Customer ID must be 4 digits")]
     public int CustomerID { get; set; }
 
     [Required, StringLength(50)] 
@@ -27,7 +28,6 @@ public class Customer
 
     [StringLength(4)]
     [RegularExpression(@"^\d{4}$", ErrorMessage = "Postcode must be 4 digits")]
-
     public string? PostCode { get; set; }
 
     [StringLength(12)]

@@ -19,8 +19,6 @@ public class Account
     public int AccountNumber { get; set; }
     
     [Required]
-    // [StringLength(1)]
-    // [RegularExpression("^[CS]$", ErrorMessage = "AccountType must be C or S")]
     [JsonConverter(typeof(AccountTypeStringToAccountTypeEnumConverter))]
     [Display(Name = "Type")]
     public AccountType AccountType { get; set; }
@@ -36,7 +34,7 @@ public class Account
     public virtual List<Transaction> Transactions { get; set; }
     
     [NotMapped]
-    public decimal MinimumBalanceAllowed => AccountType == AccountType.Saving ? 0.01M : 300M;
+    public decimal MinimumBalanceAllowed => AccountType == AccountType.Saving ? 0 : 300M;
 
     [NotMapped]
     private int FreeTransactions { get; set; } = 2;

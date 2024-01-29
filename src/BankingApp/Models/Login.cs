@@ -5,9 +5,8 @@ namespace BankingApp.Models;
 public class Login
 {
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
-    [Required]
-    [StringLength(8)]
-    // To do: Data annotation: 8 digits
+    [Required, StringLength(8)]
+    [RegularExpression(@"^\d{8}$", ErrorMessage = "LoginID must be 8 digits")]
     public string LoginID { get; set; }
 
     [Required]

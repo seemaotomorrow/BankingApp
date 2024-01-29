@@ -29,7 +29,7 @@
                         <td>@billPay.AccountNumber</td>
                         <td>@billPay.Amount.ToString("0.00")</td>
                         <td>@billPay.ScheduleTimeUtc.ToLocalTime()</td>
-                        <td>@billPay.Period</td>
+                        <td>@(billPay.Period == 'O' ? "One-off" : "Monthly")</td>
                         <td>
                             <a class="btn btn-primary" asp-controller="BillPay"
                                asp-action="Cancel" asp-route-billPayId="@billPay.BillPayID">Cancel</a>
@@ -69,7 +69,7 @@
                     <td>@billPay.AccountNumber</td>
                     <td>@billPay.Amount.ToString("0.00")</td>
                     <td>@billPay.ScheduleTimeUtc.ToLocalTime()</td>
-                    <td>@billPay.Period</td>
+                    <td>@(billPay.Period == 'O' ? "One-off" : "Monthly")</td>
                     <td style="color: red;">Failed</td>
                 </tr>
             }

@@ -1,8 +1,6 @@
 using BankingApp.Data;
 using BankingApp.Models;
-using BankingApp.ViewModels;
 using BankingApp.Filters;
-using BankingApp.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

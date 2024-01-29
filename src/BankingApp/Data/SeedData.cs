@@ -9,6 +9,11 @@ public static class SeedData
     public static void Initialize(IServiceProvider serviceProvider)
     {
         var context = serviceProvider.GetRequiredService<BankingAppContext>();
+        Initialize(context);
+    }
+    
+    public static void Initialize(BankingAppContext context)
+    {
         
         // Look for customers.
         if(context.Customers.Any())
@@ -62,7 +67,7 @@ public static class SeedData
                 Name = "Water Company",
                 Address = "123 Main Street",
                 City = "Sydney",
-                Phone = "0434567890",
+                Phone = "(04) 3456 7890",
                 Postcode = "2000",
                 State = "NSW"
             },
@@ -71,7 +76,7 @@ public static class SeedData
                 Name = "Electric Company",
                 Address = "456 Elm Street",
                 City = "Melbourne",
-                Phone = "0987654321",
+                Phone = "(09) 8765 4321",
                 Postcode = "3000",
                 State = "VIC"
             },
@@ -80,7 +85,7 @@ public static class SeedData
                 Name = "Telstra",
                 Address = "789 Maple Avenue",
                 City = "Brisbane",
-                Phone = "0456789123",
+                Phone = "(04) 5678 9123",
                 Postcode = "4000",
                 State = "QLD"
             },
@@ -89,7 +94,7 @@ public static class SeedData
                 Name = "Origin Hot Water",
                 Address = "101 Oak Street",
                 City = "Perth",
-                Phone = "0865432190",
+                Phone = "(08) 6543 2190",
                 Postcode = "6000",
                 State = "WA"
             });

@@ -16,6 +16,7 @@ public class Transaction
 {
     public int TransactionID { get; set; }
     
+    [Required]
     public TransactionType TransactionType { get; set; }
     
     [ForeignKey("Account")]
@@ -29,10 +30,10 @@ public class Transaction
     
     [Column(TypeName = "money")]
     [Required(ErrorMessage = "Amount is required")]
-    [Range(0.01, double.MaxValue,ErrorMessage = "Amount must be a positive value")]
-    public decimal Amount { get; set; } //Amount to credit or debit?
+    [Range(0.01, double.MaxValue,ErrorMessage = "Amount must be a positive value bigger than 0.01")]
+    public decimal Amount { get; set; } 
     
-    [StringLength(30)]
+    [StringLength(30, ErrorMessage = "Comment cannot exceed 30 characters")]
     public string? Comment { get; set; }
     
     [Required]

@@ -30,12 +30,8 @@
     <script>
         function showPopup() {
             var transactionType = '@Model.TransactionType'; // Get the transaction type from the Razor view
-            var confirmation = confirm("Are you sure you want to confirm the transaction?");
-            if (confirmation) {
-                alert(transactionType + " successful!");
-                return true; // Allow the form to be submitted
-            }
-            return false; // Prevent the form from being submitted
+            alert(transactionType + " successful!");
+            return true; // Allow the form to be submitted
         }
     </script>
 }
