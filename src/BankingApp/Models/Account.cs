@@ -34,7 +34,7 @@ public class Account
     public virtual List<Transaction> Transactions { get; set; }
     
     [NotMapped]
-    public decimal MinimumBalanceAllowed => AccountType == AccountType.Saving ? 0.01M : 300M;
+    public decimal MinimumBalanceAllowed => AccountType == AccountType.Saving ? 0 : 300M;
 
     [NotMapped]
     private int FreeTransactions { get; set; } = 2;

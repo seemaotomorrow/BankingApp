@@ -9,6 +9,11 @@ public static class SeedData
     public static void Initialize(IServiceProvider serviceProvider)
     {
         var context = serviceProvider.GetRequiredService<BankingAppContext>();
+        Initialize(context);
+    }
+    
+    public static void Initialize(BankingAppContext context)
+    {
         
         // Look for customers.
         if(context.Customers.Any())
