@@ -1,4 +1,4 @@
-using AdminWebAPI.Data;
+
 using AdminWebAPI.Models;
 using Newtonsoft.Json;
 using AdminWebAPI.Utilities;
@@ -10,14 +10,22 @@ public static class SeedData
     public static void Initialize(IServiceProvider serviceProvider)
     {
         var context = serviceProvider.GetRequiredService<BankingAppContext>();
-        
+            
+        Initialize(context);
+    }
+
+    public static void Initialize(BankingAppContext context)
+    {
+        //var context = serviceProvider.GetRequiredService<BankingAppContext>();
+
+
         // Look for customers.
-        if(context.Customers.Any())
+        if (context.Customers.Any())
             return; // DB has already been seeded.
-        
+
         // To do: Seed data from JSON file
         const string customerUrl = "https://coreteaching01.csit.rmit.edu.au/~e103884/wdt/services/customers/";
-        
+
         using var client = new HttpClient();
         var json = client.GetStringAsync(customerUrl).Result;
 
@@ -28,7 +36,7 @@ public static class SeedData
             {
                 new AccountTypeStringToAccountTypeEnumConverter()
             },
-            DateFormatString = "dd/MM/yyyy hh:mm:ss tt" 
+            DateFormatString = "dd/MM/yyyy hh:mm:ss tt"
         });
 
         foreach (var customer in customers)
@@ -38,11 +46,11 @@ public static class SeedData
             var login = customer.Login;
             login.CustomerID = customer.CustomerID;
             context.Logins.Add(login);
-            
+
             foreach (var account in customer.Accounts)
             {
                 var transactions = account.Transactions;
-                
+
                 foreach (var transaction in transactions)
                 {
                     transaction.TransactionType = TransactionType.Deposit;
@@ -55,6 +63,7 @@ public static class SeedData
                 context.Accounts.Add(account);
             }
         }
+
         context.SaveChanges();
     }
 }

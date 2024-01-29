@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using AdminWebAPI.Repositories;
 using AdminWebAPI.Models;
-using System.Threading.Tasks;
+
 
 [ApiController]
 [Route("[controller]")]

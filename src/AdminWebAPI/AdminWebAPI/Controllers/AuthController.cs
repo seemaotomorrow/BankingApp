@@ -1,10 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using AdminWebAPI.Models;
-using AdminWebAPI.Services;
+
 
 
 namespace AdminWebAPI.Controllers
@@ -34,13 +30,15 @@ namespace AdminWebAPI.Controllers
                 return Unauthorized();
             }
 
-            // 
+             
             // var token = GenerateJwtToken();
              var token = "ssda";
 
             return Ok(new { Token = token });
         }
 
+        
+        
         // private string GenerateJwtToken()
         // {
         //     var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
