@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using BankingApp.Data;
 using BankingApp.Models;
 using BankingApp.Filters;
-using BankingApp.Tools.Utilities;
+using BankingApp.Repositories;
+using BankingApp.Services;
 using BankingApp.ViewModels;
 
 namespace BankingApp.Controllers;
@@ -10,18 +11,18 @@ namespace BankingApp.Controllers;
 [AuthorizeCustomer]
 public class TransactionController : Controller
 {
-    private readonly BankingAppContext _context;
-    private const decimal AccountTransferServiceCharge = 0.10m;
-    private const decimal AtmWithdrawalServiceCharge = 0.05m;
+    private readonly IAccountRepository _accountRepository;
+    private readonly IBankingService _bankingService;
     
-    public TransactionController(BankingAppContext context)
+    public TransactionController(BankingAppContext context, IAccountRepository accountRepository, ITransactionRepository transactionRepository, IBankingService bankingService)
     {
-        _context = context;
+        _accountRepository = accountRepository;
+        _bankingService = bankingService;
     }
     
-    public async Task<IActionResult> Deposit(int accountNumber)
+    public IActionResult Deposit(int accountNumber)
     {
-        var account = await _context.Accounts.FindAsync(accountNumber);
+        var account = _accountRepository.GetAccount(accountNumber);
         return View(
             new DepositViewModel
             {
@@ -34,9 +35,12 @@ public class TransactionController : Controller
     public async Task<IActionResult> Deposit(DepositViewModel viewModel)
     {
         // validators
-        ValidateAmount(viewModel.Amount);
-        ValidateComment(viewModel.Comment);
-
+        var amountErrors = _bankingService.ValidateAmount(viewModel.Amount);
+        var commentErrors = _bankingService.ValidateComment(viewModel.Comment);
+        foreach (var error in amountErrors.Concat(commentErrors))
+        {
+            ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+        }
         if (!ModelState.IsValid)
             return View(viewModel);
         var transaction = new Transaction()
@@ -52,7 +56,7 @@ public class TransactionController : Controller
     
     public async Task<IActionResult> Withdraw(int accountNumber)
     {
-        var account = await _context.Accounts.FindAsync(accountNumber);
+        var account = _accountRepository.GetAccount(accountNumber);
         return View(
             new WithdrawViewModel
             {
@@ -64,26 +68,19 @@ public class TransactionController : Controller
     [HttpPost]
     public async Task<IActionResult> Withdraw(WithdrawViewModel viewModel)
     {
-        var account = await _context.Accounts.FindAsync(viewModel.AccountNumber);
-
         // Validators
-        ValidateAmount(viewModel.Amount);
-        ValidateComment(viewModel.Comment);
-
+        var amountErrors = _bankingService.ValidateAmount(viewModel.Amount);
+        var commentErrors = _bankingService.ValidateComment(viewModel.Comment);
+        // Validate if it's sufficient to cover service fee
+        var balanceSufficientError =
+            _bankingService.ValidateBalanceSufficientToCoverServiceFee(viewModel.AccountNumber, viewModel.Amount, TransactionType.Withdraw);
+        foreach (var error in amountErrors.Concat(commentErrors).Concat(balanceSufficientError))
+        {
+            ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+        }
+        
         if (!ModelState.IsValid)
             return View(viewModel);
-
-        // Validate if it's sufficient to cover service fee
-        decimal serviceCharge = 0;
-        bool applyServiceCharge = !(account.HasFreeTransaction());
-        if (applyServiceCharge)
-            serviceCharge = AtmWithdrawalServiceCharge;
-        var sufficient = account.Balance - (viewModel.Amount + serviceCharge) > account.MinimumBalanceAllowed;
-        if (!sufficient)
-        {
-            ModelState.AddModelError(nameof(viewModel.Amount), "Insufficient funds for withdrawal.");
-            return View(viewModel);
-        }
         
         // Pass data to ConfirmTransaction view model
         Transaction transaction = new Transaction()
@@ -97,9 +94,9 @@ public class TransactionController : Controller
         return RedirectToAction(nameof(ConfirmTransaction), transaction);
     }
     
-    public async Task<IActionResult> Transfer(int accountNumber)
+    public IActionResult Transfer(int accountNumber)
     {
-        var account = await _context.Accounts.FindAsync(accountNumber);
+        var account = _accountRepository.GetAccount(accountNumber);
         return View(
             new TransferViewModel()
             {
@@ -111,43 +108,25 @@ public class TransactionController : Controller
     [HttpPost]
     public async Task<IActionResult> Transfer(TransferViewModel viewModel)
     {
-        var sourceAccount = _context.Accounts.Find(viewModel.SourceAccountNumber);
-        var destinationAccount = _context.Accounts.Find(viewModel.DestinationAccountNumber);
-
         // Validators
-        ValidateAmount(viewModel.Amount);
-        ValidateComment(viewModel.Comment);
-        if (viewModel.SourceAccountNumber == viewModel.DestinationAccountNumber)
+        var amountErrors = _bankingService.ValidateAmount(viewModel.Amount);
+        var commentErrors = _bankingService.ValidateComment(viewModel.Comment);
+        var balanceSufficientError =
+            _bankingService.ValidateBalanceSufficientToCoverServiceFee(viewModel.SourceAccountNumber, viewModel.Amount, TransactionType.TransferOut);
+        var sourceAndDestinationSameError =
+            _bankingService.ValidateSourceAccAndDestinationAccDifferent(viewModel.SourceAccountNumber,
+                viewModel.DestinationAccountNumber);
+        var destinationAccountError = _bankingService.ValidateDestinationAccount(viewModel.DestinationAccountNumber);
+        
+        foreach (var error in amountErrors.Concat(commentErrors).Concat(balanceSufficientError).Concat(sourceAndDestinationSameError).Concat(destinationAccountError))
         {
-            ModelState.AddModelError("", "Source and destination accounts cannot be the same.");
+            ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
         }
 
         if (!ModelState.IsValid)
             return View(viewModel);
-        
-        if (destinationAccount == null)
-        {
-            ModelState.AddModelError("", "Invalid destination account.");
-            return View(viewModel);
-        }
-        
-        // Check if it's sufficient
-        decimal serviceCharge = 0;
-        bool applyServiceCharge = !(sourceAccount.HasFreeTransaction());
-        if (applyServiceCharge)
-            serviceCharge = AccountTransferServiceCharge;
-        var sufficient = sourceAccount.Balance - (viewModel.Amount + serviceCharge) > sourceAccount.MinimumBalanceAllowed;
-        if (!sufficient)
-        {
-            ModelState.AddModelError(nameof(viewModel.Amount), "Insufficient funds for transfer.");
-            return View(viewModel);
-        }
-        
-        // Perform transfer logic
-        sourceAccount.Balance -= (viewModel.Amount + serviceCharge);
-        destinationAccount.Balance += viewModel.Amount;
 
-        Transaction transaction = new Transaction()
+        var transaction = new Transaction()
         {
             TransactionType = TransactionType.TransferOut,
             AccountNumber = viewModel.SourceAccountNumber,
@@ -156,17 +135,13 @@ public class TransactionController : Controller
             Comment = viewModel.Comment,
             TransactionTimeUtc = DateTime.UtcNow
         };
-        
-        var serviceChargeTransaction = sourceAccount.ApplyServiceCharge(serviceCharge, applyServiceCharge);
-        if(serviceChargeTransaction != null)
-            sourceAccount.Transactions.Add(serviceChargeTransaction);
 
         return RedirectToAction(nameof(ConfirmTransaction),transaction );
     }
     
     public async Task<IActionResult> ConfirmTransaction(Transaction transaction)
     {
-        var account = await _context.Accounts.FindAsync(transaction.AccountNumber);
+        var account = _accountRepository.GetAccount(transaction.AccountNumber);
 
         return View(
             new ConfirmTransactionViewModel()
@@ -183,106 +158,26 @@ public class TransactionController : Controller
     [HttpPost]
     public async Task<IActionResult> ConfirmTransaction(ConfirmTransactionViewModel viewModel)
     {
-        var account = await _context.Accounts.FindAsync(viewModel.SourceAccountNumber);
+        var account = _accountRepository.GetAccount(viewModel.SourceAccountNumber);
         
         // Process the confirmed transaction here
         if (viewModel.TransactionType == TransactionType.Deposit)
         {
-            account.Balance += viewModel.Amount;
-            account.Transactions.Add(new Transaction()
-            {
-                TransactionType = TransactionType.Deposit,
-                AccountNumber = account.AccountNumber,
-                Amount = viewModel.Amount,
-                Comment = viewModel.Comment,
-                TransactionTimeUtc = DateTime.UtcNow
-            });
+            _bankingService.Deposit(account.AccountNumber, viewModel.Amount, viewModel.Comment);
         }
 
         // Process Withdraw
         if (viewModel.TransactionType == TransactionType.Withdraw)
         {
-            // Check if apply service charge
-            decimal serviceCharge = 0;
-            bool applyServiceCharge = !(account.HasFreeTransaction());
-            if (applyServiceCharge)
-                serviceCharge = AtmWithdrawalServiceCharge;
-            
-            account.Transactions.Add(new Transaction()
-            {
-                TransactionType = TransactionType.Withdraw,
-                AccountNumber = account.AccountNumber,
-                Amount = viewModel.Amount,
-                Comment = viewModel.Comment,
-                TransactionTimeUtc = DateTime.UtcNow
-            });
-            account.Balance -= (viewModel.Amount+ serviceCharge);
-            
-            var serviceChargeTransaction = account.ApplyServiceCharge(serviceCharge, applyServiceCharge);
-            if(serviceChargeTransaction != null)
-                account.Transactions.Add(serviceChargeTransaction);
+            _bankingService.Withdraw(account.AccountNumber,viewModel.Amount, viewModel.Comment);
         }
 
         // Process Transfer
         if (viewModel.TransactionType == TransactionType.TransferOut)
         {
-            var destinationAccount = _context.Accounts.Find(viewModel.DestinationAccountNumber);
-
-            // Check if apply service charge
-            decimal serviceCharge = 0;
-            bool applyServiceCharge = !(account.HasFreeTransaction());
-            if (applyServiceCharge)
-                serviceCharge = AccountTransferServiceCharge;
-            
-            // Perform transfer logic
-            account.Balance -= (viewModel.Amount + serviceCharge);
-            destinationAccount.Balance += viewModel.Amount;
-
-            account.Transactions.Add(new Transaction
-            {
-                TransactionType = TransactionType.TransferOut,
-                AccountNumber = viewModel.SourceAccountNumber,
-                DestinationAccountNumber = viewModel.DestinationAccountNumber,
-                Amount = viewModel.Amount,
-                Comment = viewModel.Comment,
-                TransactionTimeUtc = DateTime.UtcNow
-            });
-
-            destinationAccount.Transactions.Add(new Transaction
-            {
-                TransactionType = TransactionType.TransferIn,
-                AccountNumber = destinationAccount.AccountNumber,
-                Amount = viewModel.Amount,
-                Comment = viewModel.Comment,
-                TransactionTimeUtc = DateTime.UtcNow
-            });
-            
-            var serviceChargeTransaction = account.ApplyServiceCharge(serviceCharge, applyServiceCharge);
-            if(serviceChargeTransaction != null)
-                account.Transactions.Add(serviceChargeTransaction);
+            _bankingService.Transfer(viewModel.SourceAccountNumber, viewModel.DestinationAccountNumber.Value, viewModel.Amount, viewModel.Comment);
         }
         
-        await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index), nameof(Customer));
-    }
-
-    private void ValidateAmount(decimal amount)
-    {
-        if (amount <= 0)
-        {
-            ModelState.AddModelError(nameof(amount), "Amount must be positive.");
-        }
-        else if(amount.HasMoreThanTwoDecimalPlaces())
-        {
-            ModelState.AddModelError(nameof(amount), "Amount cannot have more than 2 decimal places.");
-        }
-    }
-
-    private void ValidateComment(string? comment)
-    {
-        if (!string.IsNullOrEmpty(comment) && comment.Length > 30)
-        {
-            ModelState.AddModelError(nameof(comment), "Comment exceeded maximum length of 30 characters.");
-        }
     }
 }

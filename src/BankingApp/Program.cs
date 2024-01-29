@@ -1,7 +1,9 @@
 using BankingApp.BackgroundServices;
+using BankingApp.Controllers;
 using BankingApp.Data;
 using BankingApp.Models;
 using BankingApp.Repositories;
+using BankingApp.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Hangfire;
@@ -44,6 +46,11 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddScoped<IPasswordHasher<Login>, PasswordHasher<Login>>();
 builder.Services.AddScoped<IBillPayRepository, BillPayRepository>();
+
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+builder.Services.AddScoped<IBankingService, BankingService>();
+
 builder.Services.AddControllersWithViews(); 
 
 var app = builder.Build();
