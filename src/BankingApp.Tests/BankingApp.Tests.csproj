@@ -30,8 +30,4 @@
     <ProjectReference Include="..\BankingApp\BankingApp.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ControllersTests\" />
-  </ItemGroup>
-
 </Project>
