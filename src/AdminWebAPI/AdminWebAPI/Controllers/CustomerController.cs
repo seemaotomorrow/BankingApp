@@ -2,7 +2,7 @@
 using AdminWebAPI.Models;
 using AdminWebAPI.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+
 
 namespace AdminWebAPI.Controllers;
 
@@ -67,8 +67,6 @@ public class CustomerController : ControllerBase
     [HttpPut("CustomerLock")]
     public async Task<ActionResult> Lock([FromBody] CustomerModel.CustomerLock customer)
     {
-        //if token is invalid
-        // make validation
        
         await _customerRepository.LockOrUnlockCustomerAsync(customer.CustomerId);
         return Ok();
