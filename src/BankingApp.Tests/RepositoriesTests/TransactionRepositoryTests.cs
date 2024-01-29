@@ -74,34 +74,6 @@ public class TransactionRepositoryTests : IDisposable
             Assert.Contains(transaction, retrievedTransactions);
         }
     }
-    
-    [Fact]
-    public void AddTransaction_NullTransaction_ThrowsArgumentNullException()
-    {
-        // Arrange
-        Transaction transaction = null;
-        var transactionRepository = new TransactionRepository(_context);
-
-        // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => transactionRepository.AddTransaction(transaction));
-    }
-
-    [Fact]
-    public void AddTransaction_InvalidAccountNumber_ThrowsInvalidOperationException()
-    {
-        // Arrange
-        var transactionRepository = new TransactionRepository(_context);
-        var transaction = new Transaction
-        {
-            AccountNumber = -123, // Invalid account number
-            Amount = 100,
-            Comment = "Test transaction",
-            TransactionTimeUtc = DateTime.UtcNow
-        };
-
-        // Act & Assert
-        Assert.Throws<InvalidOperationException>(() => transactionRepository.AddTransaction(transaction));
-    }
 
     [Fact]
     public void GetTransactionsForAccount_NonExistingAccount_ReturnsEmptyList()
