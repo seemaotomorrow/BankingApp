@@ -31,7 +31,7 @@ public class TransactionController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Deposit(DepositViewModel viewModel)
+    public IActionResult Deposit(DepositViewModel viewModel)
     {
         // validators
         var amountErrors = _bankingService.ValidateAmount(viewModel.Amount);
@@ -53,7 +53,7 @@ public class TransactionController : Controller
         return RedirectToAction(nameof(ConfirmTransaction), transaction);
     }
     
-    public async Task<IActionResult> Withdraw(int accountNumber)
+    public IActionResult Withdraw(int accountNumber)
     {
         var account = _accountRepository.GetAccount(accountNumber);
         return View(
@@ -65,7 +65,7 @@ public class TransactionController : Controller
     }
     
     [HttpPost]
-    public async Task<IActionResult> Withdraw(WithdrawViewModel viewModel)
+    public IActionResult Withdraw(WithdrawViewModel viewModel)
     {
         // Validators
         var amountErrors = _bankingService.ValidateAmount(viewModel.Amount);
@@ -82,7 +82,7 @@ public class TransactionController : Controller
             return View(viewModel);
         
         // Pass data to ConfirmTransaction view model
-        Transaction transaction = new Transaction()
+        var transaction = new Transaction()
         {
             TransactionType = TransactionType.Withdraw,
             AccountNumber = viewModel.AccountNumber,
@@ -105,7 +105,7 @@ public class TransactionController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Transfer(TransferViewModel viewModel)
+    public IActionResult Transfer(TransferViewModel viewModel)
     {
         // Validators
         var amountErrors = _bankingService.ValidateAmount(viewModel.Amount);
@@ -138,7 +138,7 @@ public class TransactionController : Controller
         return RedirectToAction(nameof(ConfirmTransaction),transaction );
     }
     
-    public async Task<IActionResult> ConfirmTransaction(Transaction transaction)
+    public IActionResult ConfirmTransaction(Transaction transaction)
     {
         var account = _accountRepository.GetAccount(transaction.AccountNumber);
 
@@ -155,7 +155,7 @@ public class TransactionController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> ConfirmTransaction(ConfirmTransactionViewModel viewModel)
+    public IActionResult ConfirmTransaction(ConfirmTransactionViewModel viewModel)
     {
         var account = _accountRepository.GetAccount(viewModel.SourceAccountNumber);
         

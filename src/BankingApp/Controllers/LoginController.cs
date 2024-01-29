@@ -33,6 +33,13 @@ public class LoginController: Controller
             return View(new Login { LoginID = loginID });
         }
 
+        if (login.isLocked)
+        {
+            // Customize error message
+            ModelState.AddModelError("LoginFailed", "LoginFailed, Your account is locked");
+            return View(new Login { LoginID = loginID });
+        }
+
         login.Customer = await _context.Customers.FindAsync(login.CustomerID);
 
         // Login customer.
