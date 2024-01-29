@@ -22,6 +22,7 @@ public class EditViewModel
     [StringLength(3, MinimumLength = 2)]
     [RegularExpression(@"^[A-Z]{2,3}$", ErrorMessage = "State must be a 2 or 3 lettered Australian state")]
     public string? State { get; set; }
+    
     public Dictionary<string, string> States { get; set; } = AustralianStates.States;
     
 

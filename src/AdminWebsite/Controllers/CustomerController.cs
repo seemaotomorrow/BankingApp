@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using AdminWebsite.Models; 
 using System.Diagnostics;
+using BankingApp.Tools.Utilities;
 
 
 namespace AdminWebsite.Controllers;
@@ -46,7 +47,9 @@ public class CustomersController : Controller
 
         var result = await response.Content.ReadAsStringAsync();
         var customer = JsonConvert.DeserializeObject<CustomerDto>(result);
-
+        
+        customer.States = AustralianStates.States;
+        
         return View(customer);
     }
 
