@@ -34,8 +34,6 @@ public class MyProfileController: Controller
         return View("Index", customer);
     }
     
-  
-    
     // GET: MyProfile/Edit
     public async Task<IActionResult> Edit()
     {

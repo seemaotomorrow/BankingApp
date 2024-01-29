@@ -24,7 +24,8 @@ public class CustomerDto
     [RegularExpression(@"^[A-Z]{2,3}$", ErrorMessage = "State must be a 2 or 3 lettered Australian state")]
     // To do: valid Australia state name
     public string? State { get; set; }
-    //public Dictionary<string, string> States { get; set; } = AustralianStates.States;
+    
+    public Dictionary<string, string> States { get; set; } = AustralianStates.States;
 
     [StringLength(4)]
     [RegularExpression(@"^\d{4}$", ErrorMessage = "Postcode must be 4 digits")]

@@ -2,7 +2,7 @@ namespace BankingApp.Tools.Utilities;
 
 public static class AustralianStates
 {
-    public static readonly Dictionary<string, string> States = new Dictionary<string, string>
+    public static readonly Dictionary<string, string> States = new()
     {
         {"NSW", "New South Wales"},
         {"VIC", "Victoria"},
