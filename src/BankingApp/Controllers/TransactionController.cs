@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using BankingApp.Data;
 using BankingApp.Models;
 using BankingApp.Filters;
 using BankingApp.Repositories;
@@ -14,7 +13,7 @@ public class TransactionController : Controller
     private readonly IAccountRepository _accountRepository;
     private readonly IBankingService _bankingService;
     
-    public TransactionController(BankingAppContext context, IAccountRepository accountRepository, ITransactionRepository transactionRepository, IBankingService bankingService)
+    public TransactionController( IAccountRepository accountRepository, IBankingService bankingService)
     {
         _accountRepository = accountRepository;
         _bankingService = bankingService;

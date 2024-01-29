@@ -12,9 +12,9 @@ public class ValidationError
 
 public interface IBankingService
 {
-    public void Deposit(int accountNumber, decimal amount, string comment);
-    public void Withdraw(int accountNumber, decimal amount, string comment);
-    public void Transfer(int sourceAccountNumber, int destinationAccountNumber, decimal amount, string comment);
+    public void Deposit(int accountNumber, decimal amount, string? comment);
+    public void Withdraw(int accountNumber, decimal amount, string? comment);
+    public void Transfer(int sourceAccountNumber, int destinationAccountNumber, decimal amount, string? comment);
     public IEnumerable<ValidationError> ValidateAmount(decimal amount);
     public IEnumerable<ValidationError> ValidateComment(string? comment);
     public IEnumerable<ValidationError> ValidateBalanceSufficientToCoverServiceFee(int accountNumber, decimal amount, TransactionType transactionType);
