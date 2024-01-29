@@ -36,25 +36,20 @@ GitHub Repository URL: https://github.com/rmit-wdt-summer-2024/s3968520-s3911598
   - Views
 
 - BankingApp.Tools
-  - Utilities
-    - AustralianStates.cs
-    - MiscellaneousExtensionUtilities.cs
-    - ValidateDateUtilities.cs
       
 - AdminWebAPITest
 - AdminWebisteTest
 - BankingApp.Test
 
 
-
 ### BillPay Feature
-Using hangfire to process background jobs
-
+The bill pay functionality in our banking application allows users to schedule and manage their bill payments conveniently. We leverage Hangfire as a background job service to automate the processing of scheduled bill payments when it reach the user scheduled times
 
 ### Database/Data
-- Use EF Core's LINQ syntax or methods
-- Embedded isLocked SQL queries
+- Used EF Core's LINQ syntax
 - Hard-code Payees data when seeding data
+- Added 'Status' column in BillPays schema
+- Added 'isLocked' column in Logins schema
 
 
 ### Reference:
