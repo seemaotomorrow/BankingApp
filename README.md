@@ -1,9 +1,10 @@
-# WDT-A2 Internet Banking Application
-## StudentID: s3968520 Mingjian Mao/ s3911598 Yahui Wang (Postgraduate)
+# Info 
+This is a 2 member group work
+- StudentID: s3968520 Mingjian Mao/ s3911598 Yahui Wang (Postgraduate)
 
-GitHub Repository URL: https://github.com/rmit-wdt-summer-2024/s3968520-s3911598-a2
+- GitHub Repository URL: https://github.com/rmit-wdt-summer-2024/s3968520-s3911598-a2
 
-
+# Banking Application
 ### Application Features
 - Check account balance and Statements
 - Simulate transactions such as deposits and withdrawals
